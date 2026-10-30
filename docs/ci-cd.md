@@ -99,7 +99,17 @@ npx --yes @vscode/vsce login vbadminx
 
 > 常见错误：`401/403` 几乎都是「组织未选 All accessible organizations」或「scope 不是 Marketplace: Manage」。
 
-## 5. 发布前检查清单
+## 5. 已知故障与排查
+
+| 现象 | 原因 | 处理 |
+|---|---|---|
+| `error: unknown option '--oidc'` | 本地 `@vscode/vsce` 低于 4.1.0（3.x 不支持 Trusted Publishing） | 升级到 `^4.1.0`；工作流使用 `./node_modules/.bin/vsce` |
+| `Marketplace OIDC token exchange failed with 404: The requested publisher doesn't exist` | Marketplace 上没有与 `package.json` 的 `publisher` 同名的 publisher | 在 <https://marketplace.visualstudio.com/manage> 创建 publisher，ID 必须与 `package.json` 的 `publisher` 完全一致 |
+| `401/403`（PAT 模式） | PAT 的 Organization 未选 `All accessible organizations`，或 scope 不是 `Marketplace: Manage` | 重新创建 PAT |
+| `apt-get install` 失败（CI host job） | Ubuntu 24.04 把 `libgtk-3-0`/`libasound2` 改名为 `*t64` | 只安装 `xvfb`，不要写死这些包名 |
+| 发布成功但 GitHub Release 未创建 | 市场发布步骤失败会中断后续 step | 工作流已用 `if: ${{ !cancelled() }}` 保证 Release 仍创建 |
+
+## 6. 发布前检查清单
 
 - `package.json` 的 `version` 已按 SemVer 更新（与 tag 一致，去掉 `v` 前缀）。
 - `package.json` 的 `publisher` 为 `vbadminx`，且该 publisher 在 Marketplace 已创建。
