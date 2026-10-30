@@ -21,6 +21,8 @@ async function main() {
       '--skip-welcome',
       '--skip-release-notes',
       '--user-data-dir', profile,
+      // Linux/CI：Electron 在容器与 GitHub Actions runner 上需要关闭沙箱，否则启动即失败。
+      ...(process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'] : []),
     ],
   }); } finally { fs.rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }); }
 }
