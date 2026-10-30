@@ -29,14 +29,19 @@ jobs:
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
+          echo "vsce 版本: $(npx --yes @vscode/vsce --version)"
+          echo "publisher: $(node -p "require('./package.json').publisher")"
+          echo "版本: $(node -p "require('./package.json').version")"
+          echo "OIDC 端点可用: $([ -n "$ACTIONS_ID_TOKEN_REQUEST_URL" ] && echo yes || echo no)"
           if [ -n "$VSCE_PAT" ]; then
             echo "使用 VSCE_PAT（PAT 将于 2026-12-01 退役，建议改用 Trusted Publishing）"
             npx --yes @vscode/vsce publish --pat "$VSCE_PAT"
           else
-            echo "未配置 VSCE_PAT，尝试 Trusted Publishing（OIDC）"
+            echo "未配置 VSCE_PAT，使用 Trusted Publishing（OIDC）"
             npx --yes @vscode/vsce publish --oidc
           fi
       - name: 发布到 Open VSX Registry
+        if: ${{ !cancelled() }}
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
         run: |
@@ -46,6 +51,7 @@ jobs:
             npx --yes ovsx publish --pat "$OVSX_PAT" output/*.vsix
           fi
       - name: 创建 GitHub Release 并附加 VSIX
+        if: ${{ !cancelled() }}
         uses: softprops/action-gh-release@v2
         with:
           files: output/*.vsix
