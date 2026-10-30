@@ -5,6 +5,14 @@
   "version": "0.1.0",
   "publisher": "vbadminx",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lilixxs/vbadminx-vscode.git"
+  },
+  "homepage": "https://github.com/lilixxs/vbadminx-vscode#readme",
+  "bugs": {
+    "url": "https://github.com/lilixxs/vbadminx-vscode/issues"
+  },
   "engines": {
     "vscode": "^1.104.0"
   },

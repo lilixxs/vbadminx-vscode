@@ -1,5 +1,8 @@
 # VBAdminx
 
+[![CI](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml)
+[![Release](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml)
+
 VS Code 扩展（`vbadminx-vscode` 0.1.0，显示名 **VBAdminx**）：为导出的 VBA 源文件提供**离线语言服务器（LSP）**、**COM 可移植类型索引**与**只读 AI 上下文工具 / Go 模型适配器**。
 
 仓库名：`vbadminx-vscode`。当前目录还不是 Git 仓库，需要先 `git init` 并设置远程地址后才能确认该远程名。
