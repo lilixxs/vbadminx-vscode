@@ -306,7 +306,7 @@
     "@types/node": "^22.0.0",
     "@types/vscode": "1.104.0",
     "@vscode/test-electron": "^2.5.2",
-    "@vscode/vsce": "^3.6.0",
+    "@vscode/vsce": "^4.1.0",
     "esbuild": "^0.28.2",
     "langium": "^4.4.0",
     "langium-cli": "^4.4.0",
