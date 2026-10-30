@@ -31,7 +31,7 @@ async function main() {
   const manifest = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   const file = path.join('output', `${manifest.name}-${manifest.version}.vsix`);
   const entries = await readArchive(file);
-  const expected = ['package.json', 'dist/extension.bundle.js', 'dist/server.bundle.js', 'language-configuration.json', 'syntaxes/vba.tmLanguage.json', 'schemas/vba-project.schema.json', 'schemas/type-index.schema.json', 'scripts/export-com.ps1', 'GLOSSARY.md', 'docs/requirements.md', 'docs/implementation.md'];
+  const expected = ['package.json', 'package.nls.json', 'package.nls.zh-cn.json', 'dist/extension.bundle.js', 'dist/server.bundle.js', 'language-configuration.json', 'snippets/vba.json', 'syntaxes/vba.tmLanguage.json', 'schemas/vba-project.schema.json', 'schemas/type-index.schema.json', 'scripts/export-com.ps1', 'scripts/discover-com.ps1', 'GLOSSARY.md', 'docs/requirements.md', 'docs/implementation.md'];
   for (const name of expected) {
     const bytes = entries.get(`extension/${name}`);
     if (!bytes) throw new Error(`VSIX 缺少 ${name}`);
@@ -41,7 +41,7 @@ async function main() {
   if (packagedManifest.version !== manifest.version) throw new Error('版本不匹配。');
   const installedDirectory = process.env.VBA_INSTALLED_EXTENSIONS || (process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'Temp', 'opencode', 'vba-vsix-extensions'));
   const installedRoot = installedDirectory && path.join(installedDirectory, `${manifest.publisher}.${manifest.name}-${manifest.version}`);
-  const runtimeFiles = ['dist/extension.bundle.js', 'dist/server.bundle.js', 'scripts/export-com.ps1'];
+  const runtimeFiles = ['dist/extension.bundle.js', 'dist/server.bundle.js', 'scripts/export-com.ps1', 'scripts/discover-com.ps1', 'snippets/vba.json'];
   const installedMatches = !!installedRoot && runtimeFiles.every(name => fs.existsSync(path.join(installedRoot, name)) && digest(fs.readFileSync(path.join(installedRoot, name))) === digest(entries.get(`extension/${name}`)));
   if (!installedMatches) throw new Error('隔离安装目录中的运行时与当前 VSIX 不一致。请重新安装最终包。');
   const units = readJson('unit-test-check.json');

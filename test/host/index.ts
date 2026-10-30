@@ -19,7 +19,7 @@ export async function run(): Promise<void> {
   assert.ok(discovered.some(model => model.id === 'opencode-go/deepseek-v4.1-flash'), 'VS Code 可以发现提供器模型');
   const commands = await vscode.commands.getCommands(true);
   assert.ok(commands.includes('vbadminx.testGo'));
-  for (const command of ['vbadminx.importTypeIndex', 'vbadminx.exportTypeIndex', 'vbadminx.extractComTypeIndex', 'vbadminx.projectStatus', 'vbadminx.createProject']) { assert.ok(commands.includes(command), `命令已注册：${command}`); }
+  for (const command of ['vbadminx.importTypeIndex', 'vbadminx.exportTypeIndex', 'vbadminx.extractComTypeIndex', 'vbadminx.discoverCom', 'vbadminx.projectStatus', 'vbadminx.createProject', 'vbadminx.editSnippets', 'vbadminx.previewForm', 'vbadminx.openSettings']) { assert.ok(commands.includes(command), `命令已注册：${command}`); }
   const folder = vscode.workspace.workspaceFolders?.[0];
   assert.ok(folder);
   const document = await vscode.workspace.openTextDocument(vscode.Uri.joinPath(folder.uri, 'Demo.bas'));

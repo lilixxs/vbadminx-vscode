@@ -1,10 +1,13 @@
 import * as vscode from 'vscode';
+import { t } from './i18n';
+import type { MessageKey } from './i18n/catalog';
 
 /**
  * “VBA 符号”侧边栏视图：列出工程或当前文件的函数、过程与变量。
  * - 点击项：在编辑器中打开对应文件并选中该符号（名称范围）。
  * - 光标移动：在树中同步显示并选中当前所在符号。
- * - 标题栏按钮：刷新与视图选项（范围 / 排序 / 过滤），选项以“菜单”分步选择。
+ * - 标题栏按钮：刷新、视图选项（范围 / 排序 / 过滤）与设置。
+ * - 打开 VBA 工程后自动展开一次（每个扩展会话）。
  */
 
 export const SYMBOLS_VIEW_ID = 'vbadminxSymbols';
@@ -12,6 +15,7 @@ export const SYMBOLS_VIEW_ID = 'vbadminxSymbols';
 type Scope = 'currentFile' | 'workspace';
 type SortMode = 'position' | 'name';
 type FilterMode = 'all' | 'functions' | 'variables';
+type GroupKind = 'procedures' | 'variables' | 'types';
 
 interface Options {
   scope: Scope;
@@ -35,6 +39,7 @@ interface SymbolEntry {
 
 type GroupNode = {
   kind: 'group';
+  group: GroupKind;
   label: string;
   icon: string;
   children: SymbolEntry[];
@@ -47,10 +52,6 @@ const isGroup = (node: Node): node is GroupNode => (node as GroupNode).kind === 
 const PROCEDURE_KINDS = new Set([vscode.SymbolKind.Function, vscode.SymbolKind.Method, vscode.SymbolKind.Property, vscode.SymbolKind.Event, vscode.SymbolKind.Constructor]);
 const VARIABLE_KINDS = new Set([vscode.SymbolKind.Variable, vscode.SymbolKind.Field, vscode.SymbolKind.Constant, vscode.SymbolKind.String, vscode.SymbolKind.Number, vscode.SymbolKind.Boolean, vscode.SymbolKind.Array, vscode.SymbolKind.Key]);
 const TYPE_KINDS = new Set([vscode.SymbolKind.Class, vscode.SymbolKind.Struct, vscode.SymbolKind.Enum, vscode.SymbolKind.Interface, vscode.SymbolKind.EnumMember]);
-
-const GROUP_PROCEDURE = '函数与过程';
-const GROUP_VARIABLE = '变量与常量';
-const GROUP_TYPE = '类型与枚举';
 const MAX_ITEMS = 800;
 
 function classify(symbol: vscode.DocumentSymbol): SymbolEntry['kind'] {
@@ -59,15 +60,21 @@ function classify(symbol: vscode.DocumentSymbol): SymbolEntry['kind'] {
   return 'type';
 }
 
-function groupLabelOf(entry: SymbolEntry): string {
-  if (entry.kind === 'procedure' || entry.kind === 'property') { return GROUP_PROCEDURE; }
-  if (entry.kind === 'variable' || entry.kind === 'constant') { return GROUP_VARIABLE; }
-  return GROUP_TYPE;
+function groupKindOf(entry: SymbolEntry): GroupKind {
+  if (entry.kind === 'procedure' || entry.kind === 'property') { return 'procedures'; }
+  if (entry.kind === 'variable' || entry.kind === 'constant') { return 'variables'; }
+  return 'types';
 }
 
-function groupIconOf(label: string): string {
-  return label === GROUP_PROCEDURE ? 'symbol-method' : label === GROUP_VARIABLE ? 'symbol-variable' : 'symbol-struct';
+function groupIconOf(kind: GroupKind): string {
+  return kind === 'procedures' ? 'symbol-method' : kind === 'variables' ? 'symbol-variable' : 'symbol-struct';
 }
+
+const GROUP_LABEL_KEY: Record<GroupKind, MessageKey> = {
+  procedures: 'symbols.group.procedures',
+  variables: 'symbols.group.variables',
+  types: 'symbols.group.types',
+};
 
 function entryIconOf(kind: SymbolEntry['kind']): string {
   return kind === 'procedure' ? 'symbol-method'
@@ -97,8 +104,7 @@ function convert(
     for (const child of symbol.children ?? []) {
       const converted = convert(child, uri, depth + 1);
       converted.parent = undefined;
-      entry.children.push(Object.assign(converted, { parent: undefined }));
-      for (const nested of converted.children) { nested.parent = undefined; }
+      entry.children.push(converted);
     }
   }
   return entry;
@@ -152,7 +158,7 @@ export class SymbolsViewProvider implements vscode.TreeDataProvider<Node> {
     // 点击项：跳转并选中符号（范围编码进 command 参数，避免依赖树实例比较）。
     item.command = {
       command: 'vbadminx.symbolsGoto',
-      title: '跳转到符号',
+      title: 'Goto symbol',
       arguments: [node.uri.toString(), node.selectionRange.start.line, node.selectionRange.start.character, node.selectionRange.end.line, node.selectionRange.end.character],
     };
     return item;
@@ -246,21 +252,23 @@ export class SymbolsViewProvider implements vscode.TreeDataProvider<Node> {
         map.set(key, list);
       }
       this.groups = [...map.entries()].map(([label, children]) => ({
-        kind: 'group' as const, label, icon: 'file-code', children,
+        kind: 'group' as const, group: 'procedures' as const, label, icon: 'file-code', children,
       }));
       for (const group of this.groups) { for (const child of group.children) { child.parent = group; } }
       return;
     }
-    const map = new Map<string, SymbolEntry[]>();
+    const map = new Map<GroupKind, SymbolEntry[]>();
     for (const entry of visible) {
-      const label = groupLabelOf(entry);
-      const list = map.get(label) ?? [];
+      const kind = groupKindOf(entry);
+      const list = map.get(kind) ?? [];
       list.push(entry);
-      map.set(label, list);
+      map.set(kind, list);
     }
-    const order = [GROUP_PROCEDURE, GROUP_VARIABLE, GROUP_TYPE];
-    this.groups = order.filter(label => map.has(label)).map(label => {
-      const group: GroupNode = { kind: 'group', label, icon: groupIconOf(label), children: map.get(label) ?? [] };
+    const order: GroupKind[] = ['procedures', 'variables', 'types'];
+    this.groups = order.filter(kind => map.has(kind)).map(kind => {
+      const group: GroupNode = {
+        kind: 'group', group: kind, label: t(GROUP_LABEL_KEY[kind]), icon: groupIconOf(kind), children: map.get(kind) ?? [],
+      };
       for (const child of group.children) { child.parent = group; }
       return group;
     });
@@ -284,6 +292,38 @@ export class SymbolsViewProvider implements vscode.TreeDataProvider<Node> {
     if (this.timer) { clearTimeout(this.timer); }
     this.emitter.dispose();
   }
+}
+
+function hasVbaEditor(): boolean {
+  return vscode.window.activeTextEditor?.document.languageId === 'vba';
+}
+
+async function workspaceHasProject(): Promise<boolean> {
+  if (!vscode.workspace.workspaceFolders?.length) { return false; }
+  try {
+    const found = await vscode.workspace.findFiles('**/vba-project.json', '**/node_modules/**', 1);
+    return found.length > 0;
+  } catch { return false; }
+}
+
+/**
+ * 打开 VBA 工程或 VBA 文件后自动展开一次“VBA 符号”视图。
+ * 每个扩展会话只展开一次，避免用户收起后又被强制打开。
+ */
+function autoExpandView(context: vscode.ExtensionContext): void {
+  let expanded = false;
+  const expand = async (): Promise<void> => {
+    if (expanded) { return; }
+    if (!hasVbaEditor() && !(await workspaceHasProject())) { return; }
+    expanded = true;
+    // 等视图完成首次数据加载再聚焦，避免空列表闪烁。
+    setTimeout(() => { void vscode.commands.executeCommand(`${SYMBOLS_VIEW_ID}.focus`); }, 250);
+  };
+  context.subscriptions.push(
+    vscode.window.onDidChangeActiveTextEditor(() => { void expand(); }),
+    vscode.workspace.onDidOpenTextDocument(document => { if (document.languageId === 'vba') { void expand(); } }),
+  );
+  void expand();
 }
 
 export function registerSymbolsView(context: vscode.ExtensionContext): void {
@@ -319,30 +359,39 @@ export function registerSymbolsView(context: vscode.ExtensionContext): void {
     await vscode.commands.executeCommand(`${SYMBOLS_VIEW_ID}.focus`);
   }));
 
+  // 标题栏“设置”：直接打开本扩展的设置页。
+  context.subscriptions.push(vscode.commands.registerCommand('vbadminx.openSettings', async () => {
+    try {
+      await vscode.commands.executeCommand('workbench.action.openSettings', `@ext:${context.extension.id}`);
+    } catch (error) {
+      void vscode.window.showErrorMessage(t('settings.openFailed', error instanceof Error ? error.message : t('error.generic')));
+    }
+  }));
+
   // 标题栏“视图选项”：分步菜单式快捷选择（范围 / 排序 / 过滤）。
   context.subscriptions.push(vscode.commands.registerCommand('vbadminx.symbolsOptions', async () => {
     const current = provider.getOptions();
     const pick = async (title: string, items: Array<{ label: string; value: string }>, active: string): Promise<string | undefined> => {
       const chosen = await vscode.window.showQuickPick(
-        items.map(item => ({ label: item.label, value: item.value, description: item.value === active ? '当前' : undefined })),
+        items.map(item => ({ label: item.label, value: item.value, description: item.value === active ? t('symbols.options.current') : undefined })),
         { title, placeHolder: title, ignoreFocusOut: true },
       );
       return chosen?.value;
     };
-    const scope = await pick('显示范围', [
-      { label: '当前文件', value: 'currentFile' },
-      { label: '整个工程', value: 'workspace' },
+    const scope = await pick(t('symbols.options.scope.title'), [
+      { label: t('symbols.options.scope.currentFile'), value: 'currentFile' },
+      { label: t('symbols.options.scope.workspace'), value: 'workspace' },
     ], current.scope);
     if (scope === undefined) { return; }
-    const sort = await pick('排序方式', [
-      { label: '按出现位置', value: 'position' },
-      { label: '按名称', value: 'name' },
+    const sort = await pick(t('symbols.options.sort.title'), [
+      { label: t('symbols.options.sort.position'), value: 'position' },
+      { label: t('symbols.options.sort.name'), value: 'name' },
     ], current.sort);
     if (sort === undefined) { return; }
-    const filter = await pick('显示内容', [
-      { label: '全部', value: 'all' },
-      { label: '仅函数与过程', value: 'functions' },
-      { label: '仅变量与常量', value: 'variables' },
+    const filter = await pick(t('symbols.options.filter.title'), [
+      { label: t('symbols.options.filter.all'), value: 'all' },
+      { label: t('symbols.options.filter.functions'), value: 'functions' },
+      { label: t('symbols.options.filter.variables'), value: 'variables' },
     ], current.filter);
     if (filter === undefined) { return; }
     await provider.setOptions({ scope: scope as Scope, sort: sort as SortMode, filter: filter as FilterMode });
@@ -370,6 +419,7 @@ export function registerSymbolsView(context: vscode.ExtensionContext): void {
     vscode.workspace.onDidChangeTextDocument(() => provider.scheduleRefresh()),
     vscode.workspace.onDidSaveTextDocument(() => provider.refresh()),
   );
+  autoExpandView(context);
   void syncFrom();
 }
 

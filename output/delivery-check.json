@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-30T19:44:37.375Z",
+  "generatedAt": "2026-10-30T23:39:11.508Z",
   "package": {
-    "file": "output\\vbadminx-vscode-0.1.0.vsix",
-    "bytes": 297717,
-    "sha256": "d283919afab7423ebdbd689162e38fb26f1b85338c310025218f19d32aa73067",
-    "version": "0.1.0",
-    "files": 23,
+    "file": "output\\vbadminx-vscode-0.2.0.vsix",
+    "bytes": 339720,
+    "sha256": "ffc58c8e41aae31010bca7bc785dccbdd029e98ed60deeff22ab99c6e9e24edc",
+    "version": "0.2.0",
+    "files": 32,
     "requiredFilesMatchBuild": true,
     "isolatedInstalledRuntimeMatches": true
   },
@@ -14,12 +14,12 @@
       "measured": true,
       "runner": "node:test",
       "node": "v22.23.2",
-      "files": 7,
-      "tests": 117,
-      "passed": 117,
+      "files": 10,
+      "tests": 134,
+      "passed": 134,
       "failed": 0,
       "exitCode": 0,
-      "generatedAt": "2026-10-30T19:42:11.404Z"
+      "generatedAt": "2026-10-30T23:39:05.534Z"
     },
     "vscodeApi": {
       "vscodeVersion": "1.144.0",

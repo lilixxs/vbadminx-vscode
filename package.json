@@ -1,10 +1,17 @@
 {
   "name": "vbadminx-vscode",
   "displayName": "VBAdminx",
-  "description": "面向导出 VBA 工程的离线语言服务器、COM 类型索引和只读 AI 上下文工具。",
-  "version": "0.1.0",
+  "description": "%ext.description%",
+  "version": "0.2.0",
   "publisher": "lilixxs",
   "private": true,
+  "keywords": [
+    "vba",
+    "vb6",
+    "excel",
+    "language-server",
+    "com"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/lilixxs/vbadminx-vscode.git"
@@ -27,7 +34,8 @@
   "activationEvents": [
     "onLanguage:vba",
     "onLanguageModelChatProvider:vbadminx-go",
-    "onView:vbadminxSymbols"
+    "onView:vbadminxSymbols",
+    "workspaceContains:**/vba-project.json"
   ],
   "capabilities": {
     "untrustedWorkspaces": {
@@ -46,6 +54,7 @@
     "benchmark:lsp": "npm run compile && node scripts/benchmark-server.cjs",
     "cases:vba": "npm run compile && node scripts/vba-cases.cjs",
     "capture": "npm run compile && node scripts/capture-vscode.cjs",
+    "preview:form": "npm run compile && node scripts/render-form-preview.cjs",
     "verify:package": "node scripts/verify-package.cjs",
     "vscode:prepublish": "npm run compile"
   },
@@ -71,6 +80,12 @@
         "path": "./syntaxes/vba.tmLanguage.json"
       }
     ],
+    "snippets": [
+      {
+        "language": "vba",
+        "path": "./snippets/vba.json"
+      }
+    ],
     "jsonValidation": [
       {
         "fileMatch": [
@@ -90,77 +105,95 @@
     "commands": [
       {
         "command": "vbadminx.projectStatus",
-        "title": "VBAdminx: 查看工程索引"
+        "title": "%cmd.projectStatus%"
       },
       {
         "command": "vbadminx.createProject",
-        "title": "VBAdminx: 创建工程配置"
+        "title": "%cmd.createProject%"
       },
       {
         "command": "vbadminx.importTypeIndex",
-        "title": "VBAdminx: 导入 COM 类型索引"
+        "title": "%cmd.importTypeIndex%"
       },
       {
         "command": "vbadminx.exportTypeIndex",
-        "title": "VBAdminx: 导出 COM 类型索引"
+        "title": "%cmd.exportTypeIndex%"
       },
       {
         "command": "vbadminx.extractComTypeIndex",
-        "title": "VBAdminx: 从 Windows 类型库提取 COM 索引"
+        "title": "%cmd.extractComTypeIndex%"
+      },
+      {
+        "command": "vbadminx.discoverCom",
+        "title": "%cmd.discoverCom%"
       },
       {
         "command": "vbadminx.configureGo",
-        "title": "VBAdminx: 配置 OpenCode Go API Key"
+        "title": "%cmd.configureGo%"
       },
       {
         "command": "vbadminx.clearGoKey",
-        "title": "VBAdminx: 删除保存的 OpenCode Go API Key"
+        "title": "%cmd.clearGoKey%"
       },
       {
         "command": "vbadminx.testGo",
-        "title": "VBAdminx: 验证 Go 模型连接"
+        "title": "%cmd.testGo%"
       },
       {
         "command": "vbadminx.previewContext",
-        "title": "VBAdminx: 预览只读 VBA 上下文"
+        "title": "%cmd.previewContext%"
       },
       {
         "command": "vbadminx.refreshSymbols",
-        "title": "VBAdminx: 刷新符号视图",
+        "title": "%cmd.refreshSymbols%",
         "icon": "$(refresh)"
       },
       {
         "command": "vbadminx.symbolsOptions",
-        "title": "VBAdminx: 符号视图选项",
+        "title": "%cmd.symbolsOptions%",
         "icon": "$(list-unordered)"
       },
       {
         "command": "vbadminx.symbolsGoto",
-        "title": "VBAdminx: 跳转到符号"
+        "title": "%cmd.symbolsGoto%"
       },
       {
         "command": "vbadminx.symbolsFindReferences",
-        "title": "VBAdminx: 查找符号引用"
+        "title": "%cmd.symbolsFindReferences%"
       },
       {
         "command": "vbadminx.symbolsRename",
-        "title": "VBAdminx: 重命名符号"
+        "title": "%cmd.symbolsRename%"
       },
       {
         "command": "vbadminx.workspaceSymbols",
-        "title": "VBAdminx: 查询工程符号"
+        "title": "%cmd.workspaceSymbols%"
       },
       {
         "command": "vbadminx.focusSymbols",
-        "title": "VBAdminx: 聚焦符号视图"
+        "title": "%cmd.focusSymbols%"
+      },
+      {
+        "command": "vbadminx.openSettings",
+        "title": "%cmd.openSettings%",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "vbadminx.editSnippets",
+        "title": "%cmd.editSnippets%"
+      },
+      {
+        "command": "vbadminx.previewForm",
+        "title": "%cmd.previewForm%",
+        "icon": "$(preview)"
       }
     ],
     "views": {
       "explorer": [
         {
           "id": "vbadminxSymbols",
-          "name": "VBA 符号",
-          "contextualTitle": "VBA 符号",
+          "name": "%view.symbols.name%",
+          "contextualTitle": "%view.symbols.name%",
           "icon": "$(symbol-method)"
         }
       ]
@@ -176,6 +209,18 @@
           "command": "vbadminx.symbolsOptions",
           "when": "view == vbadminxSymbols",
           "group": "navigation@2"
+        },
+        {
+          "command": "vbadminx.openSettings",
+          "when": "view == vbadminxSymbols",
+          "group": "navigation@3"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "vbadminx.previewForm",
+          "when": "resourceExtname == .frm",
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
@@ -194,25 +239,47 @@
     "configuration": {
       "title": "VBAdminx",
       "properties": {
+        "vbadminx.language": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "en",
+            "zh-cn",
+            "zh-tw",
+            "ja",
+            "ko"
+          ],
+          "enumDescriptions": [
+            "%config.language.enum.auto%",
+            "%config.language.enum.en%",
+            "%config.language.enum.zh-cn%",
+            "%config.language.enum.zh-tw%",
+            "%config.language.enum.ja%",
+            "%config.language.enum.ko%"
+          ],
+          "default": "auto",
+          "scope": "window",
+          "description": "%config.language.description%"
+        },
         "vbadminx.format.keywordCase": {
           "type": "boolean",
           "default": true,
-          "description": "使用 VBA 关键字标准大小写。"
+          "description": "%config.format.keywordCase%"
         },
         "vbadminx.format.lineWrap": {
           "type": "boolean",
           "default": false,
-          "description": "在可证明安全的长参数列表中插入续行。"
+          "description": "%config.format.lineWrap%"
         },
         "vbadminx.format.reorderDeclarations": {
           "type": "boolean",
           "default": false,
-          "description": "只对安全的连续 Dim 声明排序。"
+          "description": "%config.format.reorderDeclarations%"
         },
         "vbadminx.format.formatDesign": {
           "type": "boolean",
           "default": false,
-          "description": "允许仅调整窗体设计段排版。保留属性和值。"
+          "description": "%config.format.formatDesign%"
         },
         "vbadminx.diagnostics.missingInformation": {
           "type": "string",
@@ -222,18 +289,47 @@
             "off"
           ],
           "default": "information",
-          "description": "缺少类型或宿主信息时的诊断级别。"
+          "description": "%config.diagnostics.missingInformation%"
         },
         "vbadminx.diagnostics.nameCase": {
           "type": "boolean",
           "default": true,
-          "description": "提示引用与声明的名称大小写差异。"
+          "description": "%config.diagnostics.nameCase%"
+        },
+        "vbadminx.snippets.customPath": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "description": "%config.snippets.customPath%"
+        },
+        "vbadminx.com.softwareList": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "Excel",
+            "Word",
+            "PowerPoint",
+            "Outlook",
+            "Access",
+            "Office",
+            "ADODB",
+            "Scripting",
+            "MSXML2",
+            "VBScript",
+            "WScript",
+            "Shell",
+            "DAO"
+          ],
+          "scope": "application",
+          "description": "%config.com.softwareList%"
         },
         "vbadminx.go.enabled": {
           "type": "boolean",
           "default": true,
           "scope": "application",
-          "description": "向 VS Code 注册 Go 模型。只有发送聊天请求或执行连接验证时才访问模型服务。"
+          "description": "%config.go.enabled%"
         },
         "vbadminx.go.connection": {
           "type": "string",
@@ -243,19 +339,19 @@
           ],
           "default": "magpie",
           "scope": "application",
-          "description": "magpie 使用本机现有代理；direct 使用官方 Go API，需要单独配置 API Key。"
+          "description": "%config.go.connection%"
         },
         "vbadminx.go.baseUrl": {
           "type": "string",
           "default": "http://127.0.0.1:3425/v1",
           "scope": "application",
-          "description": "Magpie 的 OpenAI Chat Completions 基础地址。direct 模式使用官方固定地址。远程环境的回环地址属于远程扩展主机。"
+          "description": "%config.go.baseUrl%"
         },
         "vbadminx.go.model": {
           "type": "string",
           "default": "opencode-go/deepseek-v4.1-flash",
           "scope": "application",
-          "description": "Magpie 代理的模型 ID。direct 模式固定使用 deepseek-v4.1-flash。"
+          "description": "%config.go.model%"
         }
       }
     },
@@ -269,12 +365,12 @@
     "languageModelTools": [
       {
         "name": "get_vba_context",
-        "displayName": "读取 VBA 上下文",
+        "displayName": "%tool.context.displayName%",
         "toolReferenceName": "vbaContext",
         "canBeReferencedInPrompt": true,
         "icon": "$(file-code)",
         "when": "isWorkspaceTrusted",
-        "userDescription": "读取当前工作区中活动 VBA 文件的选区、诊断、工程符号或确定引用。",
+        "userDescription": "%tool.context.userDescription%",
         "modelDescription": "Read VBA context from the active document in the current workspace. Return selected code, diagnostics, project symbols, or resolved references. It does not modify files. Use selection mode only after the user selects code.",
         "inputSchema": {
           "type": "object",

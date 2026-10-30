@@ -1,6 +1,6 @@
-# VBAdminx 0.1.0 实现说明
+# VBAdminx 0.2.0 实现说明
 
-本文记录 vbadminx-vscode 0.1.0 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
+本文记录 vbadminx-vscode 0.2.0 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
 
 ## 1. 定位
 
@@ -180,8 +180,8 @@ VS Code 扩展宿主
 |---|---|
 | `npm run typecheck` | 通过 |
 | `npm test` | 单元回归测试通过，覆盖解析、服务、格式化、工程、COM 索引、AI 协议和修改安全边界。最终数量见交付报告 |
-| `npm run test:host`（VS Code **1.143.1**） | 31 项检查通过，含基础语言与 AI 接入、COM 成员补全、BOM/CRLF 保存、坏编码暂停语义修改、文件增删、单次撤销跨文件重命名和范围格式化边界。明细见 `output/vscode-api-check.json`（`failed: []`） |
-| VSIX 安装验证 | `output/vbadminx-vscode-0.1.0.vsix` 安装到**隔离的 extensions 目录**（`VBA_INSTALLED_EXTENSIONS` 模式）后重新验证：补全建议与 `VBAdminx:` 命令面板可用，截图 `output/screenshots/01-language-editor.png`、`02-completion.png`、`03-commands.png` 为 installed-vsix 模式产出；**未改动用户日常 VS Code 配置**，目标版本 ≥ 1.104 |
+| `npm run test:host`（VS Code **1.144.0**） | 31 项检查通过，含基础语言与 AI 接入、COM 成员补全、BOM/CRLF 保存、坏编码暂停语义修改、文件增删、单次撤销跨文件重命名和范围格式化边界。明细见 `output/vscode-api-check.json`（`failed: []`） |
+| VSIX 安装验证 | 0.1.0 时已用 `output/vbadminx-vscode-0.1.0.vsix` 安装到**隔离的 extensions 目录**（`VBA_INSTALLED_EXTENSIONS` 模式）验证补全与命令面板，截图 `output/screenshots/01-03` 为 installed-vsix 模式产出；**未改动用户日常 VS Code 配置**。0.2.0 已重新构建 `output/vbadminx-vscode-0.2.0.vsix`，包内容由 `npm run package` 校验 |
 | `node scripts/check-sample.cjs <导出目录>`（只读普查，样例路径见 requirements 第 9 节） | 61 文件、1 工程、0 坏编码。唯一 Error 为 `CQ24_AdvancedSort.bas` 第 567 行对应过程真实缺 `End Sub`；其余类型、宿主与大小写提示的计数见 `output/sample-check.json`。未改源码，报告不含源码文本，未加载 Office 或外部类型索引 |
 | `npm run benchmark:lsp` | `output/lsp-benchmark.json`：真实 LSP 子进程、磁盘扫描、JSON-RPC 与诊断通知，1000 文件、10 万行。实际数值以报告为准；不含 VS Code UI 启动，`referenceHardwareMatched: false` |
 | `npm run benchmark` | `output/benchmark.json`：in-process 解析与语言服务 CPU 口径的对照报告，数字以报告文件为准 |
@@ -195,4 +195,16 @@ VS Code 扩展宿主
 - 官方 `direct` 模式未实连（无独立 API Key）。
 - macOS、Linux、Remote SSH/WSL/dev container：实现路径存在（`extensionKind: workspace`、纯 Node、非 Windows 拒绝提取），但**无实际环境验收**。
 - AI 真实聊天 UI 未人工验收；不受信任工作区单独启动验收未做。
-- 窗体设计段、`.frx` 资源不解析（SYN-04/05，按需求即为不实现项）。
+- `.frx` 二进制资源不解析；窗体预览只读取 `.frm` 文本设计段，图片与部分列表内容以占位呈现。
+- 语言服务器诊断文本与内置符号说明仍为简体中文；界面多语言覆盖扩展侧文案与清单。
+
+
+## 11. 0.2.0 新增模块
+
+| 模块 | 职责 | 关键约束 |
+|---|---|---|
+| `src/comDiscovery.ts` + `scripts/discover-com.ps1` | 按 `vbadminx.com.softwareList` 只读扫描 `HKCR\\TypeLib`，多选后批量调用 `export-com.ps1` 写入 `.vba/type-indexes/`，可选更新 `vba-project.json` 的 `typeIndexes` | 仅 Windows；不注册类型库、不执行组件；PowerShell 参数逐项传递（`shell: false`） |
+| `src/i18n.ts` + `src/i18n/catalog.ts` | 五语言文案与 `auto` 解析；`package.nls.*.json` 负责清单本地化 | 文案回调不依赖语言服务器；服务器诊断暂不本地化 |
+| `src/snippetFile.ts` + `src/snippets.ts` + `snippets/vba.json` | 内置片段经 `contributes.snippets`；自定义片段按设置路径读取并以补全项注入 | 片段文件允许 JSONC 注释；保存后按 mtime 重新读取；不可执行任意代码 |
+| `src/formDesign.ts` + `src/formHtml.ts` + `src/formPreview.ts` | 解析 `.frm` 设计段并近似渲染到 WebView，编辑时 250 ms 防抖热更新 | 只读；不解析 `.frx`；HTML 文本与属性均转义；CSP 仅允许内联样式与 nonce 脚本 |
+| `src/symbolsView.ts` | 打开 VBA 工程自动展开一次；标题栏齿轮打开扩展设置 | 每个扩展会话只强制展开一次 |

@@ -1,0 +1,224 @@
+{
+  "Sub procedure": {
+    "prefix": ["sub", "subr"],
+    "body": [
+      "${1:Public} Sub ${2:ProcedureName}(${3})",
+      "\t${4:}' TODO",
+      "End Sub"
+    ],
+    "description": "Sub ... End Sub"
+  },
+  "Function procedure": {
+    "prefix": ["function", "func"],
+    "body": [
+      "${1:Public} Function ${2:FunctionName}(${3}) As ${4:Variant}",
+      "\t${5:}' TODO",
+      "\t${2:FunctionName} = ${6:Empty}",
+      "End Function"
+    ],
+    "description": "Function ... End Function"
+  },
+  "Property Get": {
+    "prefix": ["property get", "pget"],
+    "body": [
+      "${1:Public} Property Get ${2:PropertyName}() As ${3:Variant}",
+      "\t${2:PropertyName} = ${4:m_value}",
+      "End Property"
+    ],
+    "description": "Property Get ... End Property"
+  },
+  "Property Let": {
+    "prefix": ["property let", "plet"],
+    "body": [
+      "${1:Public} Property Let ${2:PropertyName}(ByVal ${3:value} As ${4:Variant})",
+      "\t${5:m_value} = ${3:value}",
+      "End Property"
+    ],
+    "description": "Property Let ... End Property"
+  },
+  "Property Set": {
+    "prefix": ["property set", "pset"],
+    "body": [
+      "${1:Public} Property Set ${2:PropertyName}(ByVal ${3:value} As ${4:Object})",
+      "\tSet ${5:m_value} = ${3:value}",
+      "End Property"
+    ],
+    "description": "Property Set ... End Property"
+  },
+  "If ... Then": {
+    "prefix": ["if", "ifthen"],
+    "body": [
+      "If ${1:condition} Then",
+      "\t${2:}' TODO",
+      "End If"
+    ],
+    "description": "If ... Then ... End If"
+  },
+  "If ... Else": {
+    "prefix": ["ifelse", "if else"],
+    "body": [
+      "If ${1:condition} Then",
+      "\t${2:}' TODO",
+      "Else",
+      "\t${3:}' TODO",
+      "End If"
+    ],
+    "description": "If ... Then ... Else ... End If"
+  },
+  "If ... ElseIf ... Else": {
+    "prefix": ["ifelseif", "elseif"],
+    "body": [
+      "If ${1:condition} Then",
+      "\t${2:}' TODO",
+      "ElseIf ${3:condition2} Then",
+      "\t${4:}' TODO",
+      "Else",
+      "\t${5:}' TODO",
+      "End If"
+    ],
+    "description": "If ... ElseIf ... Else ... End If"
+  },
+  "Select Case": {
+    "prefix": ["select", "selectcase", "case"],
+    "body": [
+      "Select Case ${1:expression}",
+      "\tCase ${2:value1}",
+      "\t\t${3:}' TODO",
+      "\tCase Else",
+      "\t\t${4:}' TODO",
+      "End Select"
+    ],
+    "description": "Select Case ... End Select"
+  },
+  "For ... Next": {
+    "prefix": ["for", "fornext"],
+    "body": [
+      "Dim ${1:i} As ${2:Long}",
+      "For ${1:i} = ${3:1} To ${4:count}",
+      "\t${5:}' TODO",
+      "Next ${1:i}"
+    ],
+    "description": "For counter ... Next"
+  },
+  "For Each ... Next": {
+    "prefix": ["foreach", "for each"],
+    "body": [
+      "Dim ${1:item} As ${2:Variant}",
+      "For Each ${1:item} In ${3:collection}",
+      "\t${4:}' TODO",
+      "Next ${1:item}"
+    ],
+    "description": "For Each ... Next"
+  },
+  "Do While ... Loop": {
+    "prefix": ["dowhile", "do while"],
+    "body": [
+      "Do While ${1:condition}",
+      "\t${2:}' TODO",
+      "Loop"
+    ],
+    "description": "Do While ... Loop"
+  },
+  "Do ... Loop Until": {
+    "prefix": ["dountil", "do loop"],
+    "body": [
+      "Do",
+      "\t${1:}' TODO",
+      "Loop Until ${2:condition}"
+    ],
+    "description": "Do ... Loop Until"
+  },
+  "With ... End With": {
+    "prefix": ["with", "withblock"],
+    "body": [
+      "With ${1:object}",
+      "\t${2:}.${3:Property} = ${4:value}",
+      "End With"
+    ],
+    "description": "With ... End With"
+  },
+  "On Error GoTo": {
+    "prefix": ["onerror", "on error"],
+    "body": [
+      "On Error GoTo ${1:handler}",
+      "\t${2:}' TODO",
+      "Exit ${3:Sub}",
+      "${1:handler}:",
+      "\t${4:}' TODO: handle error",
+      "\tResume Next"
+    ],
+    "description": "On Error GoTo ... handler"
+  },
+  "Dim declaration": {
+    "prefix": ["dim", "declare"],
+    "body": [
+      "Dim ${1:name} As ${2:Long}"
+    ],
+    "description": "Dim ... As ..."
+  },
+  "Const declaration": {
+    "prefix": ["const", "constant"],
+    "body": [
+      "${1:Private} Const ${2:NAME} As ${3:Long} = ${4:0}"
+    ],
+    "description": "Const ... As ... = ..."
+  },
+  "Enum declaration": {
+    "prefix": ["enum"],
+    "body": [
+      "${1:Public} Enum ${2:EnumName}",
+      "\t${3:FirstValue} = ${4:0}",
+      "\t${5:SecondValue} = ${6:1}",
+      "End Enum"
+    ],
+    "description": "Enum ... End Enum"
+  },
+  "Type declaration": {
+    "prefix": ["type", "udt"],
+    "body": [
+      "${1:Public} Type ${2:TypeName}",
+      "\t${3:Field1} As ${4:Long}",
+      "\t${5:Field2} As ${6:String}",
+      "End Type"
+    ],
+    "description": "Type ... End Type"
+  },
+  "MsgBox": {
+    "prefix": ["msgbox"],
+    "body": [
+      "MsgBox ${1:Prompt}, ${2:vbInformation}, ${3:Title}"
+    ],
+    "description": "MsgBox prompt, buttons, title"
+  },
+  "Debug.Print": {
+    "prefix": ["debug", "debugprint"],
+    "body": [
+      "Debug.Print ${1:expression}"
+    ],
+    "description": "Debug.Print"
+  },
+  "Array literal": {
+    "prefix": ["array"],
+    "body": [
+      "${1:values} = Array(${2:item1}, ${3:item2})"
+    ],
+    "description": "Array(...) literal"
+  },
+  "Collection add": {
+    "prefix": ["collectionadd", "coladd"],
+    "body": [
+      "${1:collection}.Add ${2:item}, ${3:key}"
+    ],
+    "description": "Collection.Add item, key"
+  },
+  "Open file": {
+    "prefix": ["openfile", "freefile"],
+    "body": [
+      "Dim ${1:fileNumber} As Integer",
+      "${1:fileNumber} = FreeFile",
+      "Open ${2:path} For ${3:Input} As #${1:fileNumber}",
+      "Close #${1:fileNumber}"
+    ],
+    "description": "Open ... For ... As #fileNumber"
+  }
+}

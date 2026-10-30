@@ -2,10 +2,10 @@
   "measured": true,
   "runner": "node:test",
   "node": "v22.23.2",
-  "files": 7,
-  "tests": 117,
-  "passed": 117,
+  "files": 10,
+  "tests": 134,
+  "passed": 134,
   "failed": 0,
   "exitCode": 0,
-  "generatedAt": "2026-10-30T21:59:08.704Z"
+  "generatedAt": "2026-10-30T23:39:05.534Z"
 }
