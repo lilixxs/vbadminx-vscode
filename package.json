@@ -3,7 +3,7 @@
   "displayName": "VBAdminx",
   "description": "面向导出 VBA 工程的离线语言服务器、COM 类型索引和只读 AI 上下文工具。",
   "version": "0.1.0",
-  "publisher": "vbadminx",
+  "publisher": "lilixxs",
   "private": true,
   "repository": {
     "type": "git",
@@ -83,7 +83,7 @@
       "[vba]": {
         "editor.tabSize": 4,
         "editor.insertSpaces": true,
-        "editor.defaultFormatter": "vbadminx.vbadminx-vscode",
+        "editor.defaultFormatter": "lilixxs.vbadminx-vscode",
         "editor.formatOnSave": false
       }
     },

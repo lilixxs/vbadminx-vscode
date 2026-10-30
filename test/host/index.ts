@@ -9,7 +9,7 @@ export async function run(): Promise<void> {
   console.log(`HOST VERSION: ${vscode.version}`);
   const coldModels = await vscode.lm.selectChatModels({ vendor: 'vbadminx-go' });
   assert.ok(coldModels.some(model => model.id === 'opencode-go/deepseek-v4.1-flash'), '打开 VBA 文件前可以通过提供器发现模型');
-  const extension = vscode.extensions.getExtension<{ provider: GoProvider; client: import('vscode-languageclient/node').LanguageClient }>('vbadminx.vbadminx-vscode');
+  const extension = vscode.extensions.getExtension<{ provider: GoProvider; client: import('vscode-languageclient/node').LanguageClient }>('lilixxs.vbadminx-vscode');
   assert.ok(extension, '开发扩展必须存在');
   const api = await extension.activate();
   const status = await api.client.sendRequest<{ modules: number }>('vba/projectStatus');

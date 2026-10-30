@@ -36,11 +36,11 @@ git push origin v0.1.0
 推送 tag 后 Release 工作流会：
 
 1. 编译、测试、打包；
-2. 若配置了 `VSCE_PAT` → `vsce publish` 到 VS Code Marketplace；
+2. 若配置了 `VSCE_PAT` → `vsce publish --pat` 到 VS Code Marketplace；否则用 `vsce publish --oidc`（Trusted Publishing）；
 3. 若配置了 `OVSX_PAT` → `ovsx publish` 到 Open VSX Registry；
 4. 用内置的 `GITHUB_TOKEN` 创建 GitHub Release，并附加 VSIX。
 
-**未配置密钥时**，市场发布步骤只输出警告并跳过（工作流仍成功），GitHub Release 照常创建。这样未配置密钥也不会让流水线变红。
+**发布凭据的两种来源**：有 `VSCE_PAT` 用 PAT；没有则走 OIDC，此时 publisher 必须在 Marketplace 已存在且配好 Trusted Publishing，否则该步骤报 404。市场发布失败**不会**中断 Open VSX 与 GitHub Release（这两个步骤带 `if: ${{ !cancelled() }}`）。
 
 ## 4. 需要配置的 Secrets
 
@@ -50,7 +50,7 @@ git push origin v0.1.0
 
 ### 方式 A（推荐，无长期密钥）：Trusted Publishing
 
-1. 登录 <https://marketplace.visualstudio.com/manage>，打开 publisher `vbadminx`。
+1. 登录 <https://marketplace.visualstudio.com/manage>，打开 publisher `lilixxs`。
 2. 选择 **Trusted Publishing → Create**，填写：
    - Policy name：`Release workflow`
    - Repository owner：`lilixxs`
@@ -85,11 +85,11 @@ git push origin v0.1.0
 #### 先创建 publisher（发布前必须）
 
 1. <https://marketplace.visualstudio.com/manage> 用**同一个 Microsoft 账号**登录。
-2. **Create publisher**，ID 填 `vbadminx`（必须与 `package.json` 的 `publisher` 完全一致，创建后不可修改）。
+2. **Create publisher**，ID 填 `lilixxs`（必须与 `package.json` 的 `publisher` 完全一致，创建后不可修改）。
 3. 本地验证：
 
 ```powershell
-npx --yes @vscode/vsce login vbadminx
+npx --yes @vscode/vsce login lilixxs
 # 粘贴 PAT，出现 “The Personal Access Token verification succeeded” 即成功
 ```
 
@@ -112,7 +112,7 @@ npx --yes @vscode/vsce login vbadminx
 ## 6. 发布前检查清单
 
 - `package.json` 的 `version` 已按 SemVer 更新（与 tag 一致，去掉 `v` 前缀）。
-- `package.json` 的 `publisher` 为 `vbadminx`，且该 publisher 在 Marketplace 已创建。
+- `package.json` 的 `publisher` 为 `lilixxs`，且该 publisher 在 Marketplace 已创建并配置 Trusted Publishing。
 - 建议补充 `repository` 字段（指向本仓库），`vsce` 在缺少时会告警：
   ```json
   "repository": { "type": "git", "url": "https://github.com/<owner>/vbadminx-vscode" }
@@ -120,7 +120,7 @@ npx --yes @vscode/vsce login vbadminx
 - `README.md` 是 Marketplace 详情页内容；`docs/` 与 `output/` 的说明不参与详情页。
 - 本地先跑一遍：`npm run compile && npm test && npm run verify:package`。
 
-## 6. 本地等价命令
+## 7. 本地等价命令
 
 | CI 步骤 | 本地命令 |
 |---|---|
