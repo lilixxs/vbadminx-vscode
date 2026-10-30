@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  build:
+    name: 构建与测试
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: 安装依赖
+        run: npm ci
+      - name: 编译（tsc + esbuild bundle）
+        run: npm run compile
+      - name: 单元测试
+        run: npm test
+      - name: VBA 语法/语义用例回归
+        run: npm run cases:vba
+      - name: 语言服务器性能基准
+        run: npm run benchmark:lsp
+      - name: 打包 VSIX
+        run: npm run package
+      - name: 上传 VSIX 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: vbadminx-vscode-${{ github.sha }}
+          path: output/*.vsix
+          if-no-files-found: error
+      - name: 上传验证报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-reports-${{ github.sha }}
+          path: |
+            output/*.json
+            output/*.md
+          if-no-files-found: ignore
+
+  host:
+    name: VS Code 宿主集成检查
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run compile
+      - name: 安装虚拟显示
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+      - name: 运行宿主检查（31 项 LSP/AI 验证）
+        run: xvfb-run -a npm run test:host

@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: 打包并发布
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run compile
+      - name: 单元测试
+        run: npm test
+      - name: 打包 VSIX
+        run: npm run package
+      - name: 发布到 VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "$VSCE_PAT" ]; then
+            echo "::warning::未配置 VSCE_PAT，跳过 VS Code Marketplace 发布"
+          else
+            npx --yes @vscode/vsce publish --pat "$VSCE_PAT"
+          fi
+      - name: 发布到 Open VSX Registry
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -z "$OVSX_PAT" ]; then
+            echo "::warning::未配置 OVSX_PAT，跳过 Open VSX 发布"
+          else
+            npx --yes ovsx publish --pat "$OVSX_PAT" output/*.vsix
+          fi
+      - name: 创建 GitHub Release 并附加 VSIX
+        uses: softprops/action-gh-release@v2
+        with:
+          files: output/*.vsix
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

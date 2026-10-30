@@ -6,6 +6,7 @@ VS Code 扩展（`vbadminx-vscode` 0.1.0，显示名 **VBAdminx**）：为导出
 
 - 首版需求：[docs/requirements.md](docs/requirements.md) ｜ 实现与验证细节：[docs/implementation.md](docs/implementation.md)
 - 功能总览与截图：[docs/features.md](docs/features.md) ｜ Langium 评估：[docs/langium-evaluation.md](docs/langium-evaluation.md)
+- CI/CD（自动构建与发布）：[docs/ci-cd.md](docs/ci-cd.md)
 - AI 协议与安全约束：[docs/ai-prototype.md](docs/ai-prototype.md) ｜ 术语：[GLOSSARY.md](GLOSSARY.md)
 - 不连接 Office，不运行宏。只读 AI 工具不改写源码；重命名和快速修复经预览确认后修改源码。无 AI 时语言服务照常可用。
 
