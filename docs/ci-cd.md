@@ -44,14 +44,60 @@ git push origin v0.1.0
 
 ## 4. 需要配置的 Secrets
 
-在仓库 **Settings → Secrets and variables → Actions → New repository secret** 添加：
+> **重要时间点**：Azure DevOps 的全局 Personal Access Token（PAT）于 **2026-12-01 退役**。官方推荐改用
+> **Trusted Publishing**（GitHub OIDC 联邦身份），不保存长期密钥。工作流已同时支持两种方式：
+> 配置了 `VSCE_PAT` 就用 PAT，否则走 `vsce publish --oidc`。
+
+### 方式 A（推荐，无长期密钥）：Trusted Publishing
+
+1. 登录 <https://marketplace.visualstudio.com/manage>，打开 publisher `vbadminx`。
+2. 选择 **Trusted Publishing → Create**，填写：
+   - Policy name：`Release workflow`
+   - Repository owner：`lilixxs`
+   - Repository：`vbadminx-vscode`
+   - Workflow：`release.yml`
+   - Environment：留空（工作流未使用 environment）
+3. 保存。之后打 tag 时 `release.yml` 会用 `--oidc` 换取 15 分钟有效的发布凭据（OIDC token 只能交换一次）。
+
+无需在 GitHub 配置任何 Secret。
+
+### 方式 B（过渡方案）：Personal Access Token
 
 | Secret | 用途 | 获取方式 |
 |---|---|---|
-| `VSCE_PAT` | 发布到 VS Code Marketplace | Azure DevOps 个人访问令牌（Publisher `vbadminx` 所属组织），Marketplace 范围设为 **All accessible organizations / Marketplace: Manage**。创建地址：`https://dev.azure.com/<org>/_usersSettings/tokens` |
+| `VSCE_PAT` | 发布到 VS Code Marketplace | 见下方步骤；**2026-12-01 后失效** |
 | `OVSX_PAT` | 发布到 Open VSX Registry | 在 `https://open-vsx.org` 登录后，于用户设置中创建 access token |
 
 `GITHUB_TOKEN` 由 Actions 自动提供，无需配置。
+
+#### 申请 VSCE_PAT
+
+1. 若没有 Azure DevOps 组织，先创建：<https://learn.microsoft.com/azure/devops/organizations/accounts/create-organization>
+2. 打开 <https://dev.azure.com>，选择组织。
+3. 右上角头像 → **Personal access tokens** → **New Token**。
+4. 填写：
+   - Name：任意，例如 `vscode-marketplace-publish`
+   - **Organization：必须选 `All accessible organizations`**（选具体组织会导致 401/403）
+   - Expiration：按需（到期后发布失败）
+   - Scopes：**Custom defined** → 点 **Show all scopes** → 找到 **Marketplace** → 勾选 **Manage**
+5. **Create**，立刻复制 token（只显示一次）。
+
+#### 先创建 publisher（发布前必须）
+
+1. <https://marketplace.visualstudio.com/manage> 用**同一个 Microsoft 账号**登录。
+2. **Create publisher**，ID 填 `vbadminx`（必须与 `package.json` 的 `publisher` 完全一致，创建后不可修改）。
+3. 本地验证：
+
+```powershell
+npx --yes @vscode/vsce login vbadminx
+# 粘贴 PAT，出现 “The Personal Access Token verification succeeded” 即成功
+```
+
+#### 配置到 GitHub
+
+仓库 **Settings → Secrets and variables → Actions → New repository secret**，名称填 `VSCE_PAT`，值粘贴 token。
+
+> 常见错误：`401/403` 几乎都是「组织未选 All accessible organizations」或「scope 不是 Marketplace: Manage」。
 
 ## 5. 发布前检查清单
 

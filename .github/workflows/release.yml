@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      # Trusted Publishing（OIDC）需要；未使用时无害。
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,10 +29,12 @@ jobs:
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
-          if [ -z "$VSCE_PAT" ]; then
-            echo "::warning::未配置 VSCE_PAT，跳过 VS Code Marketplace 发布"
-          else
+          if [ -n "$VSCE_PAT" ]; then
+            echo "使用 VSCE_PAT（PAT 将于 2026-12-01 退役，建议改用 Trusted Publishing）"
             npx --yes @vscode/vsce publish --pat "$VSCE_PAT"
+          else
+            echo "未配置 VSCE_PAT，尝试 Trusted Publishing（OIDC）"
+            npx --yes @vscode/vsce publish --oidc
           fi
       - name: 发布到 Open VSX Registry
         env:
