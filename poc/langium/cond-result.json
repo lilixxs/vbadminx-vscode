@@ -1,0 +1,28 @@
+{
+  "measured": true,
+  "langium": "4.4.0",
+  "technique": "清空非生效分支行内容但保留行数，令生效分支行列位置与原始文件一致",
+  "constants": {
+    "DEBUG": 1
+  },
+  "activeLineCount": 6,
+  "inactiveLineCount": 2,
+  "unknownConstant": false,
+  "procedureCount": 1,
+  "procedureNames": [
+    "Test"
+  ],
+  "parserErrors": 1,
+  "errorLines": [
+    11
+  ],
+  "errorMessages": [
+    "Expecting token of type 'End' but found `+`."
+  ],
+  "lineBase": "Chevrotain token.startLine 为 1 基；LSP 行号为 0 基",
+  "inactiveBranchErrorReported": false,
+  "activeErrorLineMatchesOriginal": true,
+  "originalLineAtExpected": "    result = result +",
+  "processedLineAtExpected": "    result = result +",
+  "lineCountPreserved": true
+}

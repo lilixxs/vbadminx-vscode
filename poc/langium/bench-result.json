@@ -1,0 +1,16 @@
+{
+  "measured": true,
+  "langium": "4.4.0",
+  "scope": "Langium core services: disk scan + parse + document build + index. No process start, no JSON-RPC, no LSP client.",
+  "files": 1000,
+  "lines": 100000,
+  "documents": 1000,
+  "procedures": 1000,
+  "coldIndexMs": 4717.84,
+  "incrementalRebuildMs": 23.51,
+  "coldParseErrors": 0,
+  "platform": "win32",
+  "node": "v22.23.2",
+  "cpu": "AMD64 Family 25 Model 116 Stepping 1, AuthenticAMD",
+  "cores": 16
+}

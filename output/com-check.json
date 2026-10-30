@@ -1,0 +1,32 @@
+{
+  "input": "C:/Windows/System32/stdole2.tlb",
+  "library": {
+    "name": "stdole",
+    "guid": "{00020430-0000-0000-C000-000000000046}",
+    "major": 2,
+    "minor": 0,
+    "lcid": 0,
+    "bitness": 64
+  },
+  "types": 13,
+  "members": 90,
+  "coclassCompletion": true,
+  "checkedMembers": [
+    "Name",
+    "Size",
+    "Bold",
+    "Italic",
+    "Underline",
+    "Strikethrough",
+    "Weight",
+    "Charset",
+    "FontChanged",
+    "hFont",
+    "Clone",
+    "IsEqual",
+    "SetRatio",
+    "AddRefHfont",
+    "ReleaseHfont"
+  ],
+  "measured": true
+}

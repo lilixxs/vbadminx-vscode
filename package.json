@@ -1,0 +1,314 @@
+{
+  "name": "vbadminx-vscode",
+  "displayName": "VBAdminx",
+  "description": "面向导出 VBA 工程的离线语言服务器、COM 类型索引和只读 AI 上下文工具。",
+  "version": "0.1.0",
+  "publisher": "vbadminx",
+  "private": true,
+  "engines": {
+    "vscode": "^1.104.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "AI"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./dist/extension.bundle.js",
+  "activationEvents": [
+    "onLanguage:vba",
+    "onLanguageModelChatProvider:vbadminx-go",
+    "onView:vbadminxSymbols"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p . && node scripts/build.cjs",
+    "typecheck": "tsc -p . --noEmit",
+    "watch": "tsc -p . --watch",
+    "test": "npm run compile && node scripts/test-unit.cjs",
+    "test:host": "npm run compile && node scripts/test-host.cjs",
+    "smoke:go": "npm run compile && node scripts/smoke-go.cjs",
+    "package": "npm run compile && vsce package --no-dependencies --allow-missing-repository --no-rewrite-relative-links --skip-license --out output/",
+    "benchmark": "npm run compile && node scripts/benchmark.cjs",
+    "benchmark:lsp": "npm run compile && node scripts/benchmark-server.cjs",
+    "cases:vba": "npm run compile && node scripts/vba-cases.cjs",
+    "capture": "npm run compile && node scripts/capture-vscode.cjs",
+    "verify:package": "node scripts/verify-package.cjs",
+    "vscode:prepublish": "npm run compile"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "vba",
+        "aliases": [
+          "VBA"
+        ],
+        "extensions": [
+          ".bas",
+          ".cls",
+          ".frm"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "vba",
+        "scopeName": "source.vba",
+        "path": "./syntaxes/vba.tmLanguage.json"
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "vba-project.json"
+        ],
+        "url": "./schemas/vba-project.schema.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[vba]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.defaultFormatter": "vbadminx.vbadminx-vscode",
+        "editor.formatOnSave": false
+      }
+    },
+    "commands": [
+      {
+        "command": "vbadminx.projectStatus",
+        "title": "VBAdminx: 查看工程索引"
+      },
+      {
+        "command": "vbadminx.createProject",
+        "title": "VBAdminx: 创建工程配置"
+      },
+      {
+        "command": "vbadminx.importTypeIndex",
+        "title": "VBAdminx: 导入 COM 类型索引"
+      },
+      {
+        "command": "vbadminx.exportTypeIndex",
+        "title": "VBAdminx: 导出 COM 类型索引"
+      },
+      {
+        "command": "vbadminx.extractComTypeIndex",
+        "title": "VBAdminx: 从 Windows 类型库提取 COM 索引"
+      },
+      {
+        "command": "vbadminx.configureGo",
+        "title": "VBAdminx: 配置 OpenCode Go API Key"
+      },
+      {
+        "command": "vbadminx.clearGoKey",
+        "title": "VBAdminx: 删除保存的 OpenCode Go API Key"
+      },
+      {
+        "command": "vbadminx.testGo",
+        "title": "VBAdminx: 验证 Go 模型连接"
+      },
+      {
+        "command": "vbadminx.previewContext",
+        "title": "VBAdminx: 预览只读 VBA 上下文"
+      },
+      {
+        "command": "vbadminx.refreshSymbols",
+        "title": "VBAdminx: 刷新符号视图",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "vbadminx.symbolsOptions",
+        "title": "VBAdminx: 符号视图选项",
+        "icon": "$(list-unordered)"
+      },
+      {
+        "command": "vbadminx.symbolsGoto",
+        "title": "VBAdminx: 跳转到符号"
+      },
+      {
+        "command": "vbadminx.symbolsFindReferences",
+        "title": "VBAdminx: 查找符号引用"
+      },
+      {
+        "command": "vbadminx.symbolsRename",
+        "title": "VBAdminx: 重命名符号"
+      },
+      {
+        "command": "vbadminx.workspaceSymbols",
+        "title": "VBAdminx: 查询工程符号"
+      },
+      {
+        "command": "vbadminx.focusSymbols",
+        "title": "VBAdminx: 聚焦符号视图"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "vbadminxSymbols",
+          "name": "VBA 符号",
+          "contextualTitle": "VBA 符号",
+          "icon": "$(symbol-method)"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "vbadminx.refreshSymbols",
+          "when": "view == vbadminxSymbols",
+          "group": "navigation@1"
+        },
+        {
+          "command": "vbadminx.symbolsOptions",
+          "when": "view == vbadminxSymbols",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vbadminx.symbolsFindReferences",
+          "when": "view == vbadminxSymbols && viewItem == symbol",
+          "group": "1_actions"
+        },
+        {
+          "command": "vbadminx.symbolsRename",
+          "when": "view == vbadminxSymbols && viewItem == symbol",
+          "group": "1_actions"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "VBAdminx",
+      "properties": {
+        "vbadminx.format.keywordCase": {
+          "type": "boolean",
+          "default": true,
+          "description": "使用 VBA 关键字标准大小写。"
+        },
+        "vbadminx.format.lineWrap": {
+          "type": "boolean",
+          "default": false,
+          "description": "在可证明安全的长参数列表中插入续行。"
+        },
+        "vbadminx.format.reorderDeclarations": {
+          "type": "boolean",
+          "default": false,
+          "description": "只对安全的连续 Dim 声明排序。"
+        },
+        "vbadminx.format.formatDesign": {
+          "type": "boolean",
+          "default": false,
+          "description": "允许仅调整窗体设计段排版。保留属性和值。"
+        },
+        "vbadminx.diagnostics.missingInformation": {
+          "type": "string",
+          "enum": [
+            "information",
+            "hint",
+            "off"
+          ],
+          "default": "information",
+          "description": "缺少类型或宿主信息时的诊断级别。"
+        },
+        "vbadminx.diagnostics.nameCase": {
+          "type": "boolean",
+          "default": true,
+          "description": "提示引用与声明的名称大小写差异。"
+        },
+        "vbadminx.go.enabled": {
+          "type": "boolean",
+          "default": true,
+          "scope": "application",
+          "description": "向 VS Code 注册 Go 模型。只有发送聊天请求或执行连接验证时才访问模型服务。"
+        },
+        "vbadminx.go.connection": {
+          "type": "string",
+          "enum": [
+            "magpie",
+            "direct"
+          ],
+          "default": "magpie",
+          "scope": "application",
+          "description": "magpie 使用本机现有代理；direct 使用官方 Go API，需要单独配置 API Key。"
+        },
+        "vbadminx.go.baseUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:3425/v1",
+          "scope": "application",
+          "description": "Magpie 的 OpenAI Chat Completions 基础地址。direct 模式使用官方固定地址。远程环境的回环地址属于远程扩展主机。"
+        },
+        "vbadminx.go.model": {
+          "type": "string",
+          "default": "opencode-go/deepseek-v4.1-flash",
+          "scope": "application",
+          "description": "Magpie 代理的模型 ID。direct 模式固定使用 deepseek-v4.1-flash。"
+        }
+      }
+    },
+    "languageModelChatProviders": [
+      {
+        "vendor": "vbadminx-go",
+        "displayName": "VBAdminx · OpenCode Go",
+        "managementCommand": "vbadminx.configureGo"
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "get_vba_context",
+        "displayName": "读取 VBA 上下文",
+        "toolReferenceName": "vbaContext",
+        "canBeReferencedInPrompt": true,
+        "icon": "$(file-code)",
+        "when": "isWorkspaceTrusted",
+        "userDescription": "读取当前工作区中活动 VBA 文件的选区、诊断、工程符号或确定引用。",
+        "modelDescription": "Read VBA context from the active document in the current workspace. Return selected code, diagnostics, project symbols, or resolved references. It does not modify files. Use selection mode only after the user selects code.",
+        "inputSchema": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "selection",
+                "diagnostics",
+                "symbols",
+                "references"
+              ],
+              "description": "Read selected code, diagnostics, project symbols, or references at the active cursor."
+            },
+            "query": {
+              "type": "string",
+              "description": "Optional symbol name filter for symbols mode."
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        }
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "1.104.0",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.6.0",
+    "esbuild": "^0.28.2",
+    "langium": "^4.4.0",
+    "langium-cli": "^4.4.0",
+    "playwright": "^1.64.1",
+    "typescript": "^5.9.3",
+    "yauzl": "^3.4.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  }
+}

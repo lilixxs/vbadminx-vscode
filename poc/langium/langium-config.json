@@ -1,0 +1,16 @@
+{
+  "projectName": "VbaMini",
+  "languages": [
+    {
+      "id": "vbaMini",
+      "grammar": "src/vba-mini.langium",
+      "fileExtensions": [".bas"],
+      "textMate": {
+        "out": "syntaxes/vba-mini.tmLanguage.json"
+      },
+      "caseInsensitive": true
+    }
+  ],
+  "out": "src/generated",
+  "mode": "development"
+}

@@ -1,0 +1,6 @@
+{
+  "vbadminx.go.enabled": true,
+  "vbadminx.go.connection": "magpie",
+  "vbadminx.go.baseUrl": "http://127.0.0.1:3425/v1",
+  "vbadminx.go.model": "opencode-go/deepseek-v4.1-flash"
+}

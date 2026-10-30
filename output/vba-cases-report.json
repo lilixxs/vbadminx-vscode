@@ -1,0 +1,1209 @@
+{
+  "generatedAt": "2026-10-29T16:33:24.160Z",
+  "parser": "VBAdminx dist/src/language/parser（容错结构级分析器，非完整 VBA 编译器）",
+  "overall": {
+    "total": 105,
+    "pass": 97,
+    "fail": 8
+  },
+  "summary": [
+    {
+      "group": "LEX",
+      "total": 17,
+      "pass": 17,
+      "falsePositive": 0,
+      "miss": 0,
+      "otherFail": 0
+    },
+    {
+      "group": "PRE",
+      "total": 12,
+      "pass": 12,
+      "falsePositive": 0,
+      "miss": 0,
+      "otherFail": 0
+    },
+    {
+      "group": "STMT",
+      "total": 31,
+      "pass": 29,
+      "falsePositive": 0,
+      "miss": 2,
+      "otherFail": 0
+    },
+    {
+      "group": "EXPR",
+      "total": 13,
+      "pass": 10,
+      "falsePositive": 0,
+      "miss": 3,
+      "otherFail": 0
+    },
+    {
+      "group": "SEM",
+      "total": 17,
+      "pass": 15,
+      "falsePositive": 0,
+      "miss": 2,
+      "otherFail": 0
+    },
+    {
+      "group": "VBA",
+      "total": 6,
+      "pass": 6,
+      "falsePositive": 0,
+      "miss": 0,
+      "otherFail": 0
+    },
+    {
+      "group": "DIAG",
+      "total": 5,
+      "pass": 4,
+      "falsePositive": 0,
+      "miss": 1,
+      "otherFail": 0
+    },
+    {
+      "group": "ENG",
+      "total": 4,
+      "pass": 4,
+      "falsePositive": 0,
+      "miss": 0,
+      "otherFail": 0
+    }
+  ],
+  "results": [
+    {
+      "id": "LEX-01",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-02",
+      "group": "LEX",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "25 连接符上限；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        28
+      ],
+      "messages": [
+        "行连接超过 24 个：逻辑行最多由 25 个物理行组成。"
+      ]
+    },
+    {
+      "id": "LEX-02b",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-03",
+      "group": "LEX",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "续行符后注释；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        3
+      ],
+      "messages": [
+        "行连接符后不能跟注释。"
+      ]
+    },
+    {
+      "id": "LEX-04",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "应识别两条语句（AST 级未检查）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-05",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "Remthis 行为以 VBE 实测为准（置信度中）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-06",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-07",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-08",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-09",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-10",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-11",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-12",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-13",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "Line/Name/Time/Get/Seek 非保留字",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-14",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "Mid 语句/函数双身份",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-15",
+      "group": "LEX",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "解析层不得因 ! 报错",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "LEX-16",
+      "group": "LEX",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "物理行 1023 字符上限；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        2
+      ],
+      "messages": [
+        "物理行超过 1023 字符。"
+      ]
+    },
+    {
+      "id": "PRE-01",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-01b",
+      "group": "PRE",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "Option 位于过程后；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        3
+      ],
+      "messages": [
+        "Option 语句必须位于所有声明之前。"
+      ]
+    },
+    {
+      "id": "PRE-01c",
+      "group": "PRE",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "Option 重复；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        2
+      ],
+      "messages": [
+        "Option explicit 重复。"
+      ]
+    },
+    {
+      "id": "PRE-02",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "未激活分支免检（重点）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-03",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-04",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-05",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-06",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-07",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-08",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "PRE-09",
+      "group": "PRE",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "Deftype 位置；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        6
+      ],
+      "messages": [
+        "Deftype 语句必须位于所有声明之前。"
+      ]
+    },
+    {
+      "id": "PRE-10",
+      "group": "PRE",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-01",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-01b",
+      "group": "STMT",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "标准模块 Friend；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "Friend 成员只能出现在类模块中。"
+      ]
+    },
+    {
+      "id": "STMT-02",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-02b",
+      "group": "STMT",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "ParamArray 不在最后；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "T 的 ParamArray 参数必须是最后一个参数。"
+      ]
+    },
+    {
+      "id": "STMT-03",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "调用括号规则",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-03b",
+      "group": "STMT",
+      "kind": "n",
+      "verdict": "失败（漏报）",
+      "note": "Foo (1, 2) 应报错；未实现则漏报",
+      "detail": "未报 Error/Warning",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-04",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-04b",
+      "group": "STMT",
+      "kind": "n",
+      "verdict": "失败（漏报）",
+      "note": "a, b = 1 应报错；未实现则漏报",
+      "detail": "未报 Error/Warning",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-05",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "单行 If 与冒号（重点）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-05b",
+      "group": "STMT",
+      "kind": "n",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [
+        5
+      ],
+      "messages": [
+        "多余的 End if，没有匹配的开始块。"
+      ]
+    },
+    {
+      "id": "STMT-06",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-07",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-08",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-08b",
+      "group": "STMT",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "Exit While 不存在；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        3
+      ],
+      "messages": [
+        "VBA 不存在 Exit While 语句。"
+      ]
+    },
+    {
+      "id": "STMT-09",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-10",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "一条 Next 关闭多层（重点）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-11",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-12",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-13",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "GoTo/GoSub/行号/标签（重点）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-14",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "On...GoTo / On...GoSub（重点）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-15",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "On Error 家族（重点）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-16",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "声明与数组维度",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-17",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "文件 I/O 语句族（重点）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-18",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-19",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-20",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-20b",
+      "group": "STMT",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "过程体内 Type；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        3,
+        5
+      ],
+      "messages": [
+        "Type 声明只能位于模块级。",
+        "多余的 End type，没有匹配的开始块。"
+      ]
+    },
+    {
+      "id": "STMT-21",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-22",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-23",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "STMT-24",
+      "group": "STMT",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-01",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "优先级全表（AST 检查未做，仅不误报）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-02",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "-2^2 结合性（AST 检查未做）",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-03",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "命名参数与空实参位",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-03b",
+      "group": "EXPR",
+      "kind": "n",
+      "verdict": "失败（漏报）",
+      "note": "位置实参跟在命名后；未实现则漏报",
+      "detail": "未报 Error/Warning",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-04",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-05",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-06",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-07",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-08",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-08b",
+      "group": "EXPR",
+      "kind": "n",
+      "verdict": "失败（漏报）",
+      "note": "AddressOf 赋值右侧；未实现则漏报",
+      "detail": "未报 Error/Warning",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-09",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "左值 a.b(c).d(e) = f",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-10",
+      "group": "EXPR",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "EXPR-11",
+      "group": "EXPR",
+      "kind": "n",
+      "verdict": "失败（漏报）",
+      "note": "元组不支持；未实现则漏报",
+      "detail": "未报 Error/Warning",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-01a",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "Option Explicit 未声明",
+      "detail": "",
+      "errorLines": [
+        4
+      ],
+      "messages": [
+        "变量或符号 x 未声明。"
+      ]
+    },
+    {
+      "id": "SEM-01b",
+      "group": "SEM",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-02",
+      "group": "SEM",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-03",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "重复定义；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        4
+      ],
+      "messages": [
+        "发现二义性名称：Foo。VBA 不支持重载。"
+      ]
+    },
+    {
+      "id": "SEM-04",
+      "group": "SEM",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-05",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "无重载；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        4
+      ],
+      "messages": [
+        "发现二义性名称：Foo。VBA 不支持重载。"
+      ]
+    },
+    {
+      "id": "SEM-06-1",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "Optional 在必选前；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "T 的必选参数 b 不能出现在 Optional 参数之后。"
+      ]
+    },
+    {
+      "id": "SEM-06-2",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "数组参数须 ByRef；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "数组参数 a 必须按引用传递（不能使用 ByVal）。"
+      ]
+    },
+    {
+      "id": "SEM-06-3",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "ParamArray 不在最后；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "T 的 ParamArray 参数必须是最后一个参数。"
+      ]
+    },
+    {
+      "id": "SEM-06-4",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "两个 ParamArray；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "T 的 ParamArray 参数必须是最后一个参数。",
+        "T 只能有一个 ParamArray 参数。"
+      ]
+    },
+    {
+      "id": "SEM-07",
+      "group": "SEM",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-07b",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "失败（漏报）",
+      "note": "两个 Default 属性；未实现则漏报",
+      "detail": "未报 Error/Warning",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-08",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "类模块 Public Type；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "类模块中用户定义类型必须声明为 Private。"
+      ]
+    },
+    {
+      "id": "SEM-09",
+      "group": "SEM",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-09b",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "失败（漏报）",
+      "note": "常量须为常量表达式；未实现则漏报",
+      "detail": "未报 Error/Warning",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-10",
+      "group": "SEM",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "SEM-11",
+      "group": "SEM",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "WithEvents 须对象类型；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "WithEvents 变量 x 必须为对象类型。"
+      ]
+    },
+    {
+      "id": "VBA-01",
+      "group": "VBA",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "VBA-04",
+      "group": "VBA",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "VBA-05",
+      "group": "VBA",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "Attribute 变体容忍",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "VBA-06",
+      "group": "VBA",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "VBA-08",
+      "group": "VBA",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "VBA-11",
+      "group": "VBA",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "DIAG-01",
+      "group": "DIAG",
+      "kind": "custom",
+      "verdict": "通过",
+      "note": "雪崩抑制：错误总数 ≤ 3",
+      "detail": "实际 3 条：2,3,4",
+      "errorLines": [
+        2,
+        3,
+        4
+      ],
+      "messages": [
+        "缺少 End If，块在此处仍未闭合。",
+        "缺少 End For，块在此处仍未闭合。",
+        "缺少 End With，块在此处仍未闭合。"
+      ]
+    },
+    {
+      "id": "DIAG-02",
+      "group": "DIAG",
+      "kind": "custom",
+      "verdict": "失败（漏报）",
+      "note": "两处错误均报出",
+      "detail": "未报行：3,4",
+      "errorLines": [
+        1
+      ],
+      "messages": [
+        "声明缺少名称。"
+      ]
+    },
+    {
+      "id": "DIAG-04",
+      "group": "DIAG",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "运行期错误不得静态报出",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "DIAG-05",
+      "group": "DIAG",
+      "kind": "n",
+      "verdict": "通过",
+      "note": "@@@ 非法；未实现则漏报",
+      "detail": "",
+      "errorLines": [
+        4
+      ],
+      "messages": [
+        "存在 VBA 词法中不合法的字符：“@@@”。"
+      ]
+    },
+    {
+      "id": "DIAG-06",
+      "group": "DIAG",
+      "kind": "custom",
+      "verdict": "通过",
+      "note": "5 处独立错误至少报 4",
+      "detail": "实际报错行：1,4,5,6",
+      "errorLines": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "messages": [
+        "声明缺少名称。",
+        "If 缺少 Then。",
+        "缺少 End For，块在此处仍未闭合。"
+      ]
+    },
+    {
+      "id": "ENG-01-1",
+      "group": "ENG",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "ENG-01-2",
+      "group": "ENG",
+      "kind": "p",
+      "verdict": "通过",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "ENG-01-3",
+      "group": "ENG",
+      "kind": "p",
+      "verdict": "通过",
+      "note": "设计段跳过后解析代码段",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    },
+    {
+      "id": "ENG-02",
+      "group": "ENG",
+      "kind": "custom",
+      "verdict": "通过",
+      "note": "多模块交叉引用",
+      "detail": "",
+      "errorLines": [],
+      "messages": []
+    }
+  ],
+  "skipped": [
+    {
+      "id": "DIAG-03",
+      "group": "DIAG",
+      "note": "消息对齐：人工/后续项"
+    },
+    {
+      "id": "ENG-01-4",
+      "group": "ENG",
+      "note": "ANSI/UTF-16：按需求 INP-02 设计为提示并暂停语义分析，不解析"
+    },
+    {
+      "id": "ENG-03",
+      "group": "ENG",
+      "note": "AST 保留 Let/Set 与注释：人工项"
+    },
+    {
+      "id": "ENG-04",
+      "group": "ENG",
+      "note": "符号表导出：由 AI 工具/引用查询承担"
+    },
+    {
+      "id": "ENG-05",
+      "group": "ENG",
+      "note": "性能基准：见 output/lsp-benchmark.json 与 benchmark"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vbadminx.local/schemas/type-index.schema.json",
+  "title": "VBAdminx 可移植类型索引",
+  "description": "COM 类型库提取结果的可移植形式。只记录公开类型元数据：类型库标识、类型、成员、参数与说明。不包含代码、二进制或注册信息。导入方必须按 library 名称、GUID、版本、LCID 与位数显式选择（COM-03）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["formatVersion", "library", "types"],
+  "properties": {
+    "formatVersion": {
+      "description": "索引格式版本。当前唯一有效值为 1。",
+      "const": 1
+    },
+    "library": { "$ref": "#/$defs/library" },
+    "types": {
+      "description": "类型库中的公开类型。顺序不承载语义。",
+      "type": "array",
+      "maxItems": 50000,
+      "items": { "$ref": "#/$defs/type" }
+    }
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^(?!\\s)[^\\u0000-\\u001F\\u007F]*\\S$"
+    },
+    "documentation": {
+      "type": "string",
+      "maxLength": 20000
+    },
+    "guid": {
+      "description": "类型库 GUID。接受带或不带花括号的规范形式，大小写不敏感。",
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^\\{?[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}\\}?$"
+    },
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "guid", "major", "minor", "lcid", "bitness"],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "guid": { "$ref": "#/$defs/guid" },
+        "major": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "minor": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "lcid": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "bitness": { "type": "integer", "enum": [32, 64] }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "typeName", "optional", "byRef"],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "typeName": { "$ref": "#/$defs/name" },
+        "optional": { "type": "boolean" },
+        "byRef": { "type": "boolean" },
+        "paramArray": { "type": "boolean" }
+      }
+    },
+    "member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind"],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "kind": {
+          "type": "string",
+          "enum": ["method", "property", "constant", "event"]
+        },
+        "returnType": { "$ref": "#/$defs/name" },
+        "parameters": {
+          "type": "array",
+          "maxItems": 1024,
+          "items": { "$ref": "#/$defs/parameter" }
+        },
+        "documentation": { "$ref": "#/$defs/documentation" }
+      }
+    },
+    "type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "members"],
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "kind": {
+          "type": "string",
+          "enum": ["class", "interface", "enum", "module"]
+        },
+        "documentation": { "$ref": "#/$defs/documentation" },
+        "members": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": { "$ref": "#/$defs/member" }
+        }
+      }
+    }
+  }
+}

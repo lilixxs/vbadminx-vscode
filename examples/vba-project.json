@@ -1,0 +1,9 @@
+{
+  "name": "VBAdminx 示例",
+  "host": "Excel",
+  "targetBits": 64,
+  "constants": { "VBA7": true, "Win64": true },
+  "modules": {},
+  "typeIndexes": [],
+  "references": []
+}

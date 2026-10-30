@@ -1,0 +1,160 @@
+{
+  "generatedAt": "2026-10-30T19:44:37.375Z",
+  "package": {
+    "file": "output\\vbadminx-vscode-0.1.0.vsix",
+    "bytes": 297717,
+    "sha256": "d283919afab7423ebdbd689162e38fb26f1b85338c310025218f19d32aa73067",
+    "version": "0.1.0",
+    "files": 23,
+    "requiredFilesMatchBuild": true,
+    "isolatedInstalledRuntimeMatches": true
+  },
+  "checks": {
+    "unitTests": {
+      "measured": true,
+      "runner": "node:test",
+      "node": "v22.23.2",
+      "files": 7,
+      "tests": 117,
+      "passed": 117,
+      "failed": 0,
+      "exitCode": 0,
+      "generatedAt": "2026-10-30T19:42:11.404Z"
+    },
+    "vscodeApi": {
+      "vscodeVersion": "1.144.0",
+      "passed": [
+        "activation",
+        "definition",
+        "references",
+        "completion",
+        "hover",
+        "signatureHelp",
+        "documentSymbols",
+        "workspaceSymbols",
+        "folding",
+        "semanticTokens",
+        "rename",
+        "formatDocument",
+        "formatRange",
+        "incrementalDiagnostics",
+        "quickFix",
+        "aiSymbols",
+        "modelDiscovery",
+        "toolRegistration",
+        "selection",
+        "existingDiagnostics",
+        "cancellation",
+        "workspaceGuards",
+        "modelToolRoundTrip",
+        "vscode.lm.sendRequest",
+        "portableComCompletion",
+        "utf8BomAndCrlfSave",
+        "localRenameWithoutExternalIndex",
+        "crossFileRenameSingleUndo",
+        "invalidUtf8SuspendsSemanticEdits",
+        "fileWatcherCreateDelete",
+        "rangeFormattingExclusiveEnd"
+      ],
+      "failed": []
+    },
+    "screenshots": {
+      "screenshots": [
+        "01-language-editor.png",
+        "02-completion.png",
+        "03-commands.png",
+        "04-diagnostics.png",
+        "05-hover.png",
+        "06-project-status.png",
+        "07-symbols-view.png",
+        "08-symbols-jump.png"
+      ],
+      "vscode": "C:\\Users\\lilixxs\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+      "mode": "installed-vsix",
+      "assertions": [
+        "VBAdminx status bar visible",
+        "AddNumbers completion widget visible",
+        "VBAdminx commands visible",
+        "undeclaredValue diagnostic visible",
+        "AddNumbers hover visible",
+        "project status JSON visible",
+        "symbols view lists AddNumbers",
+        "clicking symbol selects AddNumbers in editor"
+      ]
+    },
+    "com": {
+      "input": "C:/Windows/System32/stdole2.tlb",
+      "library": {
+        "name": "stdole",
+        "guid": "{00020430-0000-0000-C000-000000000046}",
+        "major": 2,
+        "minor": 0,
+        "lcid": 0,
+        "bitness": 64
+      },
+      "types": 13,
+      "members": 90,
+      "coclassCompletion": true,
+      "checkedMembers": [
+        "Name",
+        "Size",
+        "Bold",
+        "Italic",
+        "Underline",
+        "Strikethrough",
+        "Weight",
+        "Charset",
+        "FontChanged",
+        "hFont",
+        "Clone",
+        "IsEqual",
+        "SetRatio",
+        "AddRefHfont",
+        "ReleaseHfont"
+      ],
+      "measured": true
+    },
+    "sample": {
+      "readOnly": true,
+      "files": 61,
+      "projects": 1,
+      "invalidUtf8": 0,
+      "diagnosticCounts": {
+        "missing-type": 151,
+        "syntax.missingEnd": 1,
+        "missing-external-symbol": 297,
+        "name-case": 6,
+        "missing-host": 27
+      },
+      "errorDiagnostics": 1,
+      "elapsedMs": 1521.02,
+      "note": "Diagnostics are not compiler verdicts. No Office or external type indexes were loaded. No source text is included."
+    },
+    "lspBenchmark": {
+      "measured": true,
+      "scope": "Bundled LSP child process with real disk scan, JSON-RPC and diagnostic notification; excludes VS Code UI startup",
+      "platform": "win32",
+      "node": "v22.23.2",
+      "cpu": "AMD Ryzen 7 7840HS with Radeon 780M Graphics",
+      "cores": 16,
+      "memoryGB": 28,
+      "files": 1000,
+      "lines": 100000,
+      "coldProcessAndIndexMs": 936.68,
+      "incrementalDiagnosticNotificationMs": 164.51,
+      "completionP95Ms": 8.77,
+      "referenceHardwareMatched": false
+    }
+  },
+  "limitations": [
+    "VBA 分析器采用结构解析与有限类型推断，不等同于 Office VBA 编译器。",
+    "macOS、Linux、Remote SSH、WSL 和容器未在实际环境验收。",
+    "官方 Go 直连与真实 AI 聊天 UI 未验收。",
+    "COM record/alias 尚未表达。",
+    "性能测试硬件与需求中的参考硬件不匹配。"
+  ],
+  "mainModelQuota": {
+    "status": "unknown",
+    "reason": "主模型额度接口鉴权刷新失败，无法核实小时用量与 90% 阈值。没有用 Go 的额度代替主模型额度。"
+  }
+}

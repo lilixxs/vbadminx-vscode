@@ -1,0 +1,91 @@
+{
+  "measured": true,
+  "langium": "4.4.0",
+  "generated": "langium-cli 4.4.0",
+  "scenarios": [
+    {
+      "name": "A-correct-baseline",
+      "purpose": "基线：三个完整过程，验证解析与交叉引用可用",
+      "parserErrors": 0,
+      "procedureCount": 3,
+      "procedureNames": [
+        "First",
+        "Second",
+        "Compute"
+      ],
+      "expectedProcedures": [
+        "First",
+        "Second",
+        "Compute"
+      ],
+      "missingProcedures": [],
+      "recovered": true,
+      "resolvedCalls": 1,
+      "unresolvedCalls": 0,
+      "firstErrors": []
+    },
+    {
+      "name": "B-missing-End-Sub",
+      "purpose": "容错核心：首过程缺 End Sub，检查后续过程是否仍进入 AST",
+      "parserErrors": 1,
+      "procedureCount": 3,
+      "procedureNames": [
+        "First",
+        "Second",
+        "Compute"
+      ],
+      "expectedProcedures": [
+        "Second",
+        "Compute"
+      ],
+      "missingProcedures": [],
+      "recovered": true,
+      "resolvedCalls": 1,
+      "unresolvedCalls": 0,
+      "firstErrors": [
+        "Expecting token of type 'End' but found `Public`."
+      ]
+    },
+    {
+      "name": "C-statement-error",
+      "purpose": "语句级错误：过程内 If 缺 Then，检查后续过程是否仍进入 AST",
+      "parserErrors": 1,
+      "procedureCount": 3,
+      "procedureNames": [
+        "First",
+        "Second",
+        "Compute"
+      ],
+      "expectedProcedures": [
+        "Second",
+        "Compute"
+      ],
+      "missingProcedures": [],
+      "recovered": true,
+      "resolvedCalls": 1,
+      "unresolvedCalls": 0,
+      "firstErrors": [
+        "Expecting token of type 'Then' but found `\n`."
+      ]
+    }
+  ],
+  "realSample": {
+    "note": "仅供参考：mini 语法仅覆盖过程/块/表达式，未覆盖 Type 之外的 Enum/Declare/On Error/GoTo/行标签/Select Case/Exit/条件编译等；错误数与过程数不代表 Langium 能力",
+    "file": "CQ24_AdvancedSort.bas",
+    "parserErrors": 2,
+    "procedureCount": 0,
+    "procedureNames": [],
+    "firstErrors": [
+      {
+        "message": "Expecting: one of these possible Token sequences:\n  1. [Sub]\n  2. [Function]\n  3. [Public, Sub]\n  4. [Public, Function]\n  5. [Private, Sub]\n  6. [Private, Function]\n  7. [Dim]\n  8. [Public, Dim]\n  9. [Private, Dim]\n  10. [Option]\n  11. [Type]\n  12. [Public, Type]\n  13. [Private, Type]\nbut found: 'Private'",
+        "line": 21,
+        "offset": 559
+      },
+      {
+        "message": "Expecting end of file but found `Private`.",
+        "line": 21,
+        "offset": 559
+      }
+    ]
+  }
+}

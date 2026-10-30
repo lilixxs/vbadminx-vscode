@@ -1,0 +1,227 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "VBA",
+  "scopeName": "source.vba",
+  "fileTypes": ["bas", "cls", "frm"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#attributes" },
+    { "include": "#preprocessor" },
+    { "include": "#dates" },
+    { "include": "#numbers" },
+    { "include": "#lineContinuation" },
+    { "include": "#procedures" },
+    { "include": "#labels" },
+    { "include": "#designSection" },
+    { "include": "#types" },
+    { "include": "#constants" },
+    { "include": "#keywords" },
+    { "include": "#operators" },
+    { "include": "#builtins" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "match": "'[^\\n]*$",
+          "name": "comment.line.apostrophe.vba"
+        },
+        {
+          "match": "(?i)^\\s*rem\\b[^\\n]*$",
+          "name": "comment.line.rem.vba"
+        },
+        {
+          "match": "(?i)(:)\\s*(rem\\b[^\\n]*)$",
+          "captures": {
+            "1": { "name": "punctuation.separator.statement.vba" },
+            "2": { "name": "comment.line.rem.vba" }
+          }
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.vba" } },
+          "end": "\"(?!\")",
+          "endCaptures": { "0": { "name": "punctuation.definition.string.end.vba" } },
+          "name": "string.quoted.double.vba",
+          "patterns": [
+            {
+              "match": "\"\"",
+              "name": "constant.character.escape.double-quote.vba"
+            }
+          ]
+        }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        {
+          "begin": "(?i)^(\\s*)(attribute)\\b",
+          "beginCaptures": {
+            "2": { "name": "keyword.other.attribute.vba" }
+          },
+          "end": "$",
+          "name": "meta.attribute.vba",
+          "patterns": [
+            { "include": "#strings" },
+            { "include": "#numbers" },
+            {
+              "match": "(?i)\\bvb_[a-z0-9_]+\\b",
+              "name": "variable.other.attribute-name.vba"
+            },
+            {
+              "match": "=",
+              "name": "keyword.operator.assignment.vba"
+            }
+          ]
+        }
+      ]
+    },
+    "preprocessor": {
+      "patterns": [
+        {
+          "match": "(?i)^\\s*(#)\\s*(if|elseif|else|end\\s+if|const)\\b",
+          "captures": {
+            "1": { "name": "punctuation.definition.directive.vba" },
+            "2": { "name": "keyword.control.directive.vba" }
+          }
+        }
+      ]
+    },
+    "dates": {
+      "patterns": [
+        {
+          "match": "(?i)#\\s*\\d{1,4}[/\\-:]\\d[^#\\n]*#",
+          "name": "constant.other.date.vba"
+        },
+        {
+          "match": "(?i)#\\s*\\d{1,2}\\s+[A-Za-z]{3,9}\\s+\\d{2,4}(?:\\s+\\d{1,2}:\\d{2}(?::\\d{2})?(?:\\s*[AP]M)?)?\\s*#",
+          "name": "constant.other.date.vba"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "(?i)(?<![A-Za-z0-9_])(?:&h[0-9a-f]+|&o[0-7]+|\\d+\\.?\\d*(?:e[+\\-]?\\d+)?)[%&@!#^]?",
+          "name": "constant.numeric.vba"
+        }
+      ]
+    },
+    "lineContinuation": {
+      "patterns": [
+        {
+          "match": "[ \\t]_\\s*$",
+          "name": "punctuation.separator.line-continuation.vba"
+        }
+      ]
+    },
+    "procedures": {
+      "patterns": [
+        {
+          "match": "(?i)\\b(sub|function|property\\s+(?:get|let|set))\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "storage.type.procedure.vba" },
+            "2": { "name": "entity.name.function.vba" }
+          }
+        },
+        {
+          "match": "(?i)\\b(declare)\\s+(ptrSafe\\s+)?(sub|function)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "storage.type.procedure.vba" },
+            "2": { "name": "storage.modifier.ptrsafe.vba" },
+            "3": { "name": "storage.type.procedure.vba" },
+            "4": { "name": "entity.name.function.vba" }
+          }
+        },
+        {
+          "match": "(?i)\\b(event)\\s+([A-Za-z_][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "storage.type.event.vba" },
+            "2": { "name": "entity.name.function.vba" }
+          }
+        }
+      ]
+    },
+    "labels": {
+      "patterns": [
+        {
+          "match": "^\\s*(?:[A-Za-z_][A-Za-z0-9_]*|\\d+)\\s*:(?!=)",
+          "name": "entity.name.label.vba"
+        }
+      ]
+    },
+    "designSection": {
+      "patterns": [
+        {
+          "match": "^\\s*(?:VERSION\\s+[0-9.]+\\s*$|BEGIN\\s+.*$)",
+          "name": "meta.design-section.vba"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "match": "(?i)\\b(?:boolean|byte|integer|longlong|longptr|long|single|double|currency|decimal|date|string|object|variant|any)\\b",
+          "name": "storage.type.vba"
+        },
+        {
+          "match": "(?i)\\b(?:dim|redim|preserve|as|byval|byref|optional|paramarray|withevents|static|const|let|set|new|declare|ptrsafe|lib|alias|implements|option|explicit|compare|base|public|private|friend|global|event|raiseevent|erase|randomize)\\b",
+          "name": "storage.modifier.vba"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "match": "(?i)\\b(?:true|false|nothing|null|empty|me)\\b",
+          "name": "constant.language.vba"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "(?i)\\b(?:if|then|else|elseif|end|select|case|for|next|each|in|to|step|do|loop|while|wend|with|exit|goto|gosub|on|resume|stop|return|sub|function|property|get|type|enum|call|error|rem|attribute)\\b",
+          "name": "keyword.control.vba"
+        },
+        {
+          "match": "(?i)\\b(?:and|or|not|xor|eqv|imp|mod|is|like|typeof|addressof)\\b",
+          "name": "keyword.operator.vba"
+        },
+        {
+          "match": "(?i)\\b(?:lock|unlock|open|close|print|input|output|append|binary|random|seek|width|line|write|stop|put)\\b",
+          "name": "keyword.other.statement.vba"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": "<=|>=|<>|[-+*/\\\\^&=<>]",
+          "name": "keyword.operator.vba"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "match": "(?i)\\b(?:abs|array|asc|ascw|atn|choose|chr|chrw|command|cos|createobject|curdir|dateadd|datediff|datepart|dateserial|datevalue|day|dir|doevents|environ|eof|exp|fileattr|filedatetime|filelen|filter|fix|format|freefile|getattr|getobject|getsetting|hex|hour|iif|inputbox|instr|instrrev|int|isarray|isdate|isempty|iserror|ismissing|isnull|isnumeric|isobject|join|lbound|lcase|left|len|lof|log|ltrim|mid|minute|month|monthname|msgbox|now|oct|replace|rgb|right|rnd|round|rtrim|second|sgn|shell|sin|space|split|sqr|str|strcomp|strconv|strreverse|switch|tan|time|timer|timeserial|timevalue|trim|typename|ubound|ucase|val|vartype|weekday|weekdayname|year|array|callbyname|calldll|ddeinitiate|dderequest|partitions|load|unload)\\b",
+          "name": "support.function.vba"
+        },
+        {
+          "match": "(?i)\\b(?:debug|application|vbcrlf|vbcr|vblf|vbnullchar|vbnullstring|vbtab|vbnewline|vbobjecterror|vbokonly|vbyesno|vbyes|vbno|vbcancel|vbok|vbnull|vbdecimal|vbbyte|vbinteger|vblong|vbsingle|vbdouble|vbstring|vbdate|vbobject|vberror|vbboolean|vbvariant|vbtextcompare|vbbinarycompare)\\b",
+          "name": "support.class.vba"
+        },
+        {
+          "match": "(?i)\\b(?:vb_\\w+)\\b",
+          "name": "support.variable.vba"
+        }
+      ]
+    }
+  }
+}

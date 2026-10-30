@@ -1,0 +1,24 @@
+{
+  "screenshots": [
+    "01-language-editor.png",
+    "02-completion.png",
+    "03-commands.png",
+    "04-diagnostics.png",
+    "05-hover.png",
+    "06-project-status.png",
+    "07-symbols-view.png",
+    "08-symbols-jump.png"
+  ],
+  "vscode": "C:\\Users\\lilixxs\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
+  "mode": "installed-vsix",
+  "assertions": [
+    "VBAdminx status bar visible",
+    "AddNumbers completion widget visible",
+    "VBAdminx commands visible",
+    "undeclaredValue diagnostic visible",
+    "AddNumbers hover visible",
+    "project status JSON visible",
+    "symbols view lists AddNumbers",
+    "clicking symbol selects AddNumbers in editor"
+  ]
+}

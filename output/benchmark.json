@@ -1,0 +1,22 @@
+{
+  "measured": true,
+  "scope": "in-process parser and language-service CPU; excludes extension-host startup and disk scan",
+  "environment": {
+    "platform": "win32",
+    "node": "v22.23.2",
+    "cpu": "AMD Ryzen 7 7840HS with Radeon 780M Graphics",
+    "cores": 16,
+    "memoryGB": 28
+  },
+  "files": 1000,
+  "lines": 100000,
+  "indexingMs": 318.74,
+  "incrementalDiagnosticsMs": 32.45,
+  "completionP95Ms": 1.82,
+  "caveat": "This machine is not the 4-core/16-GB reference environment. These values do not prove the full cold-start acceptance target.",
+  "targets": {
+    "indexingMs": 10000,
+    "incrementalDiagnosticsMs": 500,
+    "completionP95Ms": 200
+  }
+}

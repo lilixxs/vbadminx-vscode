@@ -1,0 +1,17 @@
+.vscode/**
+.vscode-test/**
+node_modules/**
+src/**
+test/**
+scripts/**
+!scripts/export-com.ps1
+poc/**
+poc/langium/node_modules/**
+dist/test/**
+dist/src/**
+output/**
+temp_images/**
+**/*.map
+tsconfig.json
+package-lock.json
+AGENTS.md

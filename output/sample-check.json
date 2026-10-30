@@ -1,0 +1,16 @@
+{
+  "readOnly": true,
+  "files": 61,
+  "projects": 1,
+  "invalidUtf8": 0,
+  "diagnosticCounts": {
+    "missing-type": 151,
+    "syntax.missingEnd": 1,
+    "missing-external-symbol": 297,
+    "name-case": 6,
+    "missing-host": 27
+  },
+  "errorDiagnostics": 1,
+  "elapsedMs": 1521.02,
+  "note": "Diagnostics are not compiler verdicts. No Office or external type indexes were loaded. No source text is included."
+}

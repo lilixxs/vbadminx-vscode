@@ -1,0 +1,34 @@
+{
+  "comments": {
+    "lineComment": "'"
+  },
+  "brackets": [
+    ["(", ")"],
+    ["[", "]"],
+    ["{", "}"]
+  ],
+  "autoClosingPairs": [
+    { "open": "(", "close": ")" },
+    { "open": "[", "close": "]" },
+    { "open": "{", "close": "}" },
+    { "open": "\"", "close": "\"", "notIn": ["string", "comment"] }
+  ],
+  "surroundingPairs": [
+    ["(", ")"],
+    ["[", "]"],
+    ["{", "}"],
+    ["\"", "\""]
+  ],
+  "folding": {
+    "offSide": true,
+    "markers": {
+      "start": "^\\s*#If\\b",
+      "end": "^\\s*#End If\\b"
+    }
+  },
+  "indentationRules": {
+    "increaseIndentPattern": "^\\s*(?:(?:[Pp]ublic|[Pp]rivate|[Ff]riend|[Ss]tatic)\\s+)*(?:[Ss]ub|[Ff]unction|[Pp]roperty\\s+(?:[Gg]et|[Ll]et|[Ss]et))\\b|^\\s*(?:(?:[Pp]ublic|[Pp]rivate|[Ff]riend)\\s+)?(?:[Tt]ype|[Ee]num)\\b|^\\s*[Ii]f\\b.*\\b[Tt]hen\\s*$|^\\s*[Ee]lse[Ii]f\\b.*\\b[Tt]hen\\s*$|^\\s*[Ee]lse\\s*$|^\\s*[Ff]or\\b|^\\s*[Dd]o\\b|^\\s*[Ww]hile\\b|^\\s*[Ww]ith\\b|^\\s*[Ss]elect\\s+[Cc]ase\\b|^\\s*[Cc]ase\\b|^\\s*#[Ii]f\\b|^\\s*#[Ee]lse\\b|^\\s*#[Ee]lse[Ii]f\\b",
+    "decreaseIndentPattern": "^\\s*(?:[Ee]nd\\s+(?:[Ss]ub|[Ff]unction|[Pp]roperty|[Ii]f|[Ww]ith|[Ss]elect|[Tt]ype|[Ee]num)\\b|[Nn]ext\\b|[Ll]oop\\b|[Ww]end\\b|[Ee]lse\\b|[Ee]lse[Ii]f\\b|[Cc]ase\\b)|^\\s*#[Ee]nd\\s+[Ii]f\\b|^\\s*#[Ee]lse\\b|^\\s*#[Ee]lse[Ii]f\\b"
+  },
+  "wordPattern": "(-?\\d*\\.\\d\\w*)|([^\\`~!@#$%^&*()\\-=+\\[{\\]}\\\\|;:'\",.<>/?\\s]+)"
+}

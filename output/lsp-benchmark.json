@@ -1,0 +1,15 @@
+{
+  "measured": true,
+  "scope": "Bundled LSP child process with real disk scan, JSON-RPC and diagnostic notification; excludes VS Code UI startup",
+  "platform": "win32",
+  "node": "v22.23.2",
+  "cpu": "AMD Ryzen 7 7840HS with Radeon 780M Graphics",
+  "cores": 16,
+  "memoryGB": 28,
+  "files": 1000,
+  "lines": 100000,
+  "coldProcessAndIndexMs": 936.68,
+  "incrementalDiagnosticNotificationMs": 164.51,
+  "completionP95Ms": 8.77,
+  "referenceHardwareMatched": false
+}
