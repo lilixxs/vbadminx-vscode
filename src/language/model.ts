@@ -63,4 +63,6 @@ export interface PortableTypeIndex {
 export interface LanguageContext {
   modules: ParsedModule[];
   typeIndexes: PortableTypeIndex[];
+  /** 宿主全局对象与常量（例如 Excel 的 ThisWorkbook、xlUp），由宿主模型提供。 */
+  hostGlobals?: VbaSymbol[];
 }

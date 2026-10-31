@@ -3,7 +3,7 @@
 [![CI](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml)
 [![Release](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml)
 
-VS Code 扩展（`vbadminx-vscode` 0.2.0，显示名 **VBAdminx**）：为导出的 VBA 源文件提供**离线语言服务器（LSP）**、**COM 可移植类型索引（含从已安装软件自动查找）**、**多语言界面**、**内置/自定义代码片段**、**窗体预览**与**只读 AI 上下文工具 / Go 模型适配器**。
+VS Code 扩展（`vbadminx-vscode` 0.2.1，显示名 **VBAdminx**）：为导出的 VBA 源文件提供**离线语言服务器（LSP）**、**COM 可移植类型索引（含从已安装软件自动查找）**、**多语言界面**、**内置/自定义代码片段**、**窗体预览**与**只读 AI 上下文工具 / Go 模型适配器**。
 
 - 首版需求：[docs/requirements.md](docs/requirements.md) ｜ 实现与验证细节：[docs/implementation.md](docs/implementation.md)
 - 功能总览与截图：[docs/features.md](docs/features.md) ｜ Langium 评估：[docs/langium-evaluation.md](docs/langium-evaluation.md)
@@ -11,13 +11,15 @@ VS Code 扩展（`vbadminx-vscode` 0.2.0，显示名 **VBAdminx**）：为导出
 - AI 协议与安全约束：[docs/ai-prototype.md](docs/ai-prototype.md) ｜ 术语：[GLOSSARY.md](GLOSSARY.md)
 - 不连接 Office，不运行宏。只读 AI 工具不改写源码；重命名和快速修复经预览确认后修改源码。无 AI 时语言服务照常可用。
 
-## 0.2.0 新增
+## 0.2.x 新增
 
 - **COM 自动查找**：设置 `vbadminx.com.softwareList`（默认 Excel/Word/ADODB/Scripting/MSXML2 等），命令 `VBAdminx: 从已安装软件查找 COM 类型库` 只读扫描注册表，多选后批量提取到 `.vba/type-indexes/`，可确认加入 `typeIndexes`。仅 Windows 扩展主机。
 - **符号面板增强**：打开 VBA 工程后左侧“VBA 符号”自动展开一次；标题栏新增设置齿轮（`vbadminx.openSettings`）。
 - **多语言**：`vbadminx.language` = `auto` / `en` / `zh-cn` / `zh-tw` / `ja` / `ko`；`auto` 跟随 VS Code，未匹配回退英文。命令面板、视图名与设置说明随 VS Code 语言本地化。
 - **代码片段**：内置 `Sub`/`If`/`For`/`Select Case`/`With`/`On Error` 等片段；`vbadminx.snippets.customPath` 可加载自定义片段文件，命令 `VBAdminx: 编辑 VBA 代码片段` 创建并打开。
 - **窗体预览**：`.frm` 编辑器右上角预览按钮，WebView 近似还原 VBA 窗体并在编辑时热更新；只读，不解析 `.frx`。
+
+- **Excel 宿主默认模型（0.2.1）**：工程 `host` 为 Excel（或未配置 host）时，自动提供 Worksheet、Workbook、Range、Cells、ListObject、Chart 等常用对象与成员的**内建近似声明**；`Dim ws As Worksheet` 不再报“类型信息缺失”。显式加载的真实类型索引优先，内建模型只补缺口。
 
 ## 环境要求
 
@@ -59,6 +61,8 @@ F5 使用 `.vscode/launch.json` 中的「运行 VBAdminx」，先执行 `npm: co
 - `导入 COM 类型索引` / `导出 COM 类型索引`：全平台可用，写出无 BOM UTF-8；**导入后需手工把索引路径加入 `typeIndexes`，扩展不静默改工程配置**。
 - `从 Windows 类型库提取 COM 索引`：仅 Windows 扩展主机，运行 `scripts/export-com.ps1`（`LoadTypeLibEx(REGKIND_NONE)`，不注册、不执行、不启动 Office），位数必须显式选择。其他平台只读取可移植索引。
 - 当前实测报告 `output/com-check.json`：stdole2.tlb 提取成功，**13 types / 90 members**（coclass 展开后数字，以最新一次提取报告为准）。
+
+> **Excel 宿主默认模型（0.2.1）**：`vba-project.json` 的 `host` 为 `Excel`（或未配置）时，扩展自动注入常见的 Excel 对象与成员声明，无需先提取类型库。该模型是近似声明，不包含全部成员；加载真实 Excel 类型索引后，同名类型以显式索引为准，内建模型只补充缺失类型。`host` 为 Word、Outlook 等非 Excel 值时不会注入。
 
 ## 模型接入
 
@@ -121,7 +125,7 @@ F5 使用 `.vscode/launch.json` 中的「运行 VBAdminx」，先执行 `npm: co
 
 已通过（本机 Windows 实测）：
 
-- `npm run typecheck` 和单元回归测试通过（134 / 134），新增覆盖窗体设计解析/渲染、片段文件与五语言文案一致性。
+- `npm run typecheck` 和单元回归测试通过（140 / 140），新增覆盖窗体设计解析/渲染、片段文件与五语言文案一致性。
 - `npm run test:host`（VS Code **1.144.0**）：31 项检查通过；新增命令（`discoverCom`、`openSettings`、`editSnippets`、`previewForm`）均已注册。结果见 `output/vscode-api-check.json`（`failed: []`）。
 - COM 自动查找实测（Windows 注册表，只读）：`Excel;ADODB;Scripting;MSXML2` 返回 4 个类型库；对 `scrrun.dll` 提取得到 17 个类型，链路可用。
 - 窗体预览、代码片段与多语言目前由单元测试与宿主命令注册检查覆盖；未做逐语言人工走查与真实 `UserForm` 截图验收。
@@ -144,6 +148,8 @@ F5 使用 `.vscode/launch.json` 中的「运行 VBAdminx」，先执行 `npm: co
 - COM 索引不表达 record/alias 类型；`CreateObject`/动态对象成员在无类型索引时**不确定**，只给信息不足提示，不报确定错误。
 - 窗体预览为**近似渲染**：`.frx` 二进制资源（图片、部分列表项）以占位呈现，控件视觉与系统主题存在差异；不提供设计编辑。
 - 多语言覆盖扩展界面与清单本地化；语言服务器诊断与内置符号说明暂为简体中文。
+
+- Excel 内建宿主模型是常用对象的**近似声明**（Application/Workbook/Worksheet/Range/ListObject/Chart 等），不覆盖全部成员；需要完整元数据时请导入对应版本的类型索引。
 
 ## 参考
 

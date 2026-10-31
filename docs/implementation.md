@@ -1,6 +1,6 @@
-# VBAdminx 0.2.0 实现说明
+# VBAdminx 0.2.1 实现说明
 
-本文记录 vbadminx-vscode 0.2.0 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
+本文记录 vbadminx-vscode 0.2.1 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
 
 ## 1. 定位
 
@@ -199,7 +199,17 @@ VS Code 扩展宿主
 - 语言服务器诊断文本与内置符号说明仍为简体中文；界面多语言覆盖扩展侧文案与清单。
 
 
-## 11. 0.2.0 新增模块
+## 11. 0.2.1 宿主模型
+
+| 项 | 说明 |
+|---|---|
+| 模块 | `src/language/hostModel.ts`（内建 Excel 16.0 近似声明） |
+| 注入条件 | 工程存在且 `host` 为 Excel 或未配置；单文件模式与 Word/Outlook 宿主不注入 |
+| 合并策略 | `ProjectStore.context()` 把内建索引追加到工程索引之后，并按类型名过滤；显式索引提供同名类型时不重复注入。宿主全局符号（ThisWorkbook、ActiveSheet、xlUp 等）仅在未被显式索引覆盖时加入 `LanguageContext.hostGlobals` |
+| 服务行为 | `VbaService.visible()` 追加宿主全局符号；解析 `Worksheet`/`Workbook`/`Range` 等类型与成员时与普通类型索引一致 |
+| 边界 | 近似模型，不覆盖全部成员；非 Excel 宿主不注入；不替代 `references` 的显式版本约束 |
+
+## 12. 0.2.0 新增模块
 
 | 模块 | 职责 | 关键约束 |
 |---|---|---|

@@ -305,7 +305,9 @@ test('类型索引加载：有效入列、坏文件与缺失引用报错', async
   assert.ok(/Broken\.json/.test(messages) && /无法加载类型索引/.test(messages), `坏索引应报错：${messages}`);
   assert.ok(/类型信息缺失：Deckard 2\.0/.test(messages), `缺失引用应报错：${messages}`);
   const useUri = uriOf(ws.root, '模块/Use.bas');
-  assert.equal(store.context(useUri).typeIndexes.length, 1);
+  const context = store.context(useUri);
+  assert.equal(context.typeIndexes.filter(index => index.library.name === 'Excel').length, 1);
+  assert.ok(context.typeIndexes.some(index => index.library.name.includes('Host Model')), '应补充内建宿主模型');
 });
 
 test('CFG-04 类型索引与显式引用版本不匹配时报错且不入列', async (t) => {

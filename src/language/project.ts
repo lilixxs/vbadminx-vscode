@@ -3,8 +3,9 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { TextDecoder } from 'node:util';
 import type { Diagnostic } from 'vscode-languageserver/node';
-import type { ModuleKind, ParsedModule, PortableTypeIndex, ParseOptions } from './model';
+import type { ModuleKind, ParsedModule, PortableTypeIndex, ParseOptions, VbaSymbol } from './model';
 import { parseModule } from './parser';
+import { excelHostGlobals, excelHostIndex, usesExcelHostModel } from './hostModel';
 import { validateTypeIndex } from '../typeIndex';
 
 export interface ProjectConfig {
@@ -213,13 +214,23 @@ export class ProjectStore {
 
   remove(uri: string): void { this.revision++; uri = canonicalUri(uri); this.modules.delete(uri); this.invalidFiles.delete(uri); this.conflictedModules.delete(uri); this.open.delete(uri); for (const project of this.projects) { project.files.delete(uri); } }
   async close(uri: string): Promise<void> { uri = canonicalUri(uri); this.open.delete(uri); await this.loadFile(uri); }
-  context(uri: string): { modules: ParsedModule[]; typeIndexes: PortableTypeIndex[] } {
+  context(uri: string): { modules: ParsedModule[]; typeIndexes: PortableTypeIndex[]; hostGlobals?: VbaSymbol[] } {
     uri = canonicalUri(uri);
     const project = this.projectFor(uri);
-    return {
-      modules: [...this.modules.values()].filter(module => !this.invalidFiles.has(module.uri) && (project ? this.projectFor(module.uri) === project : module.uri === uri)),
-      typeIndexes: project?.indexes ?? [],
-    };
+    const modules = [...this.modules.values()].filter(module => !this.invalidFiles.has(module.uri) && (project ? this.projectFor(module.uri) === project : module.uri === uri));
+    const explicit = project?.indexes ?? [];
+    let typeIndexes = explicit;
+    let hostGlobals: VbaSymbol[] | undefined;
+    // Excel 宿主（或未配置宿主）默认注入内建近似模型；显式索引中的同名类型优先。
+    if (project && usesExcelHostModel(project.config.host)) {
+      const coveredTypes = new Set(explicit.flatMap(index => index.types.map(type => type.name.toLowerCase())));
+      const coveredMembers = new Set(explicit.flatMap(index => index.types.flatMap(type => type.members.map(member => member.name.toLowerCase()))));
+      const host = excelHostIndex(project?.config.targetBits ?? 64);
+      const types = host.types.filter(type => !coveredTypes.has(type.name.toLowerCase()));
+      if (types.length) { typeIndexes = [...explicit, { ...host, types }]; }
+      hostGlobals = excelHostGlobals().filter(symbol => symbol.kind !== 'constant' || !coveredMembers.has(symbol.name.toLowerCase()));
+    }
+    return { modules, typeIndexes, hostGlobals };
   }
   projectDiagnostics(uri: string): Diagnostic[] {
     uri = canonicalUri(uri);

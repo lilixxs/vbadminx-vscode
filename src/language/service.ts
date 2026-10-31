@@ -227,7 +227,10 @@ export class VbaService {
     const local = module.symbols.filter(symbol => symbol.scope && (symbol.scope === scope?.id || key(symbol.scope) === key(scope?.name ?? '')));
     const own = module.symbols.filter(symbol => !symbol.scope);
     const shared = this.context.modules.filter(item => item.uri !== module.uri).flatMap(item => item.symbols.filter(symbol => !symbol.scope && (symbol.kind === 'module' || symbol.kind === 'class' || item.kind === 'standard' && symbol.access === 'public' || ['enum', 'type'].includes(symbol.kind) && symbol.access === 'public')));
-    const result = [...local, ...own, ...shared, ...this.external().filter(symbol => !symbol.container || symbol.kind === 'constant'), ...builtins];
+    const externalVisible = this.external().filter(symbol => !symbol.container || symbol.kind === 'constant');
+    const hostGlobals = (this.context.hostGlobals ?? []).filter(symbol =>
+      ![local, own, shared, externalVisible].some(list => list.some(item => key(item.name) === key(symbol.name))));
+    const result = [...local, ...own, ...shared, ...externalVisible, ...hostGlobals, ...builtins];
     this.visibleCache.set(cacheKey, result);
     return result;
   }
