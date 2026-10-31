@@ -12,6 +12,7 @@ import {
   resolveControlType,
 } from '../src/formDesign';
 import { buildRenderPayload, formClientSize, renderFormBody, renderFormPage } from '../src/formHtml';
+import { inferFormDesignFromCode } from '../src/formInfer';
 
 const FORM = `VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} UserForm1 
@@ -124,4 +125,92 @@ test('无设计段时返回空模型', () => {
   const design = parseFormDesign('Attribute VB_Name = "Module1"\nSub Main()\nEnd Sub\n');
   assert.equal(design.root, undefined);
   assert.equal(renderFormBody(design, 'no design'), '<div class="empty">no design</div>');
+});
+
+const CODE_ONLY_FORM = `' 窗体变量
+Public SelectedSheetName As String
+
+Private Sub UserForm_Initialize()
+    With Me
+        .Width = 300
+        .Height = 150
+        .Caption = "请选择要处理的工作表"
+        With .lblTitle
+            .Caption = "请选择要处理的工作表"
+            .Top = 10
+            .Left = 10
+            .Width = 280
+            .Height = 16
+            .Font.Bold = False
+            .Font.Name = "微软雅黑"
+            .Font.Size = 14
+        End With
+        With .cmbSheets
+            .Top = 30
+            .Left = 10
+            .Width = 280
+            .Height = 20
+        End With
+        With .btnOK
+            .Caption = "确定"
+            .Top = 70
+            .Left = 70
+            .Width = 70
+            .Height = 24
+            .Default = True
+        End With
+        With .btnCancel
+            .Caption = "取消"
+            .Top = 70
+            .Left = 160
+            .Width = 70
+            .Height = 24
+        End With
+    End With
+End Sub
+`;
+
+test('无设计段时按初始化代码推断窗体', () => {
+  assert.equal(parseFormDesign(CODE_ONLY_FORM).root, undefined);
+  const design = inferFormDesignFromCode(CODE_ONLY_FORM, 'frmSelectSheet');
+  assert.ok(design.root);
+  assert.equal(design.inferred, true);
+  assert.equal(design.root.properties['ClientWidth'], '6000');
+  assert.equal(design.root.properties['ClientHeight'], '3000');
+  const byName = new Map(design.root.children.map(child => [child.name, child]));
+  assert.equal(byName.get('lblTitle')!.type, 'Label');
+  assert.equal(byName.get('cmbSheets')!.type, 'ComboBox');
+  assert.equal(byName.get('btnOK')!.type, 'CommandButton');
+  assert.equal(byName.get('btnOK')!.properties['Caption'], '确定');
+  assert.equal(byName.get('btnOK')!.properties['Left'], '1400');
+  assert.equal(byName.get('btnOK')!.properties['Width'], '1400');
+  assert.equal(byName.get('lblTitle')!.properties['Top'], '200');
+  assert.equal(byName.get('lblTitle')!.properties['Width'], '5600');
+  assert.equal(byName.get('lblTitle')!.properties['FontBold'], 'False');
+  assert.equal(byName.get('lblTitle')!.properties['FontName'], '微软雅黑');
+  assert.equal(byName.get('lblTitle')!.properties['FontSize'], '14');
+});
+
+test('只有事件过程的窗体也能生成默认布局', () => {
+  const code = [
+    'Private Sub btnOK_Click()',
+    'End Sub',
+    'Private Sub btnCancel_Click()',
+    'End Sub',
+    'Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)',
+    'End Sub',
+  ].join('\r\n');
+  const design = inferFormDesignFromCode(code, 'frmSelectSheetV2');
+  assert.ok(design.root);
+  assert.equal(design.inferred, true);
+  assert.equal(design.root.children.length, 2);
+  for (const child of design.root.children) {
+    assert.equal(child.type, 'CommandButton');
+    assert.ok(child.properties['Left'] && child.properties['Top']);
+    assert.ok(child.properties['Width'] && child.properties['Height']);
+  }
+});
+
+test('没有设计段且没有可用布局信息时仍返回空模型', () => {
+  assert.equal(inferFormDesignFromCode('Option Explicit\r\nPublic Sub Main()\r\nEnd Sub\r\n').root, undefined);
 });

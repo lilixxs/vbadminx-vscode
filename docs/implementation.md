@@ -1,6 +1,6 @@
-# VBAdminx 0.2.1 实现说明
+# VBAdminx 0.2.2 实现说明
 
-本文记录 vbadminx-vscode 0.2.1 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
+本文记录 vbadminx-vscode 0.2.2 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
 
 ## 1. 定位
 
@@ -217,4 +217,5 @@ VS Code 扩展宿主
 | `src/i18n.ts` + `src/i18n/catalog.ts` | 五语言文案与 `auto` 解析；`package.nls.*.json` 负责清单本地化 | 文案回调不依赖语言服务器；服务器诊断暂不本地化 |
 | `src/snippetFile.ts` + `src/snippets.ts` + `snippets/vba.json` | 内置片段经 `contributes.snippets`；自定义片段按设置路径读取并以补全项注入 | 片段文件允许 JSONC 注释；保存后按 mtime 重新读取；不可执行任意代码 |
 | `src/formDesign.ts` + `src/formHtml.ts` + `src/formPreview.ts` | 解析 `.frm` 设计段并近似渲染到 WebView，编辑时 250 ms 防抖热更新 | 只读；不解析 `.frx`；HTML 文本与属性均转义；CSP 仅允许内联样式与 nonce 脚本 |
+| `src/formInfer.ts`（0.2.2） | 无设计段的 `.frm`：扫描 `With Me` / `With .控件`、属性赋值与事件过程，推断控件类型与布局 | 近似推断，预览顶部显示提示；只读；完整设计请导出含设计段的 `.frm` |
 | `src/symbolsView.ts` | 打开 VBA 工程自动展开一次；标题栏齿轮打开扩展设置 | 每个扩展会话只强制展开一次 |

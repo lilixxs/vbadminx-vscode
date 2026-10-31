@@ -1,6 +1,6 @@
 # VBAdminx 功能总结
 
-版本：0.2.1　更新日期：2026-10-31
+版本：0.2.2　更新日期：2026-10-31
 
 VBAdminx 是面向**导出的 VBA 工程**（`.bas` / `.cls` / `.frm`）的 VS Code 扩展，由三块能力组成：
 
@@ -18,7 +18,7 @@ VBAdminx 是面向**导出的 VBA 工程**（`.bas` / `.cls` / `.frm`）的 VS C
 
 | 项目 | 结果 | 证据 |
 |---|---|---|
-| 单元测试 | 140 / 140 通过 | `output/unit-test-check.json` |
+| 单元测试 | 143 / 143 通过 | `output/unit-test-check.json` |
 | VS Code API 检查（宿主 1.144.0） | 31 项通过，`failed: []` | `output/vscode-api-check.json` |
 | 语法/语义用例（依据 MS-VBAL 的 106 项用例） | 自动判定 97 / 105 通过，**误报 0** | `output/vba-cases-report.json` |
 | 真实工程样例（61 文件，只读） | 唯一 Error 为真实缺 `End Sub`，无新增误报 | `output/sample-check.json` |
@@ -174,13 +174,14 @@ VBAdminx 是面向**导出的 VBA 工程**（`.bas` / `.cls` / `.frm`）的 VS C
 - 打开 `.frm` 后，编辑器右上角出现 **预览** 按钮（`vbadminx.previewForm`），在侧边 WebView 中按 VBA 设计器样式还原窗体。
 - 解析 `Begin … End` 设计段（含 `BeginProperty Font`），把 twip 按 96 DPI 换算为像素（1 px = 15 twips），还原位置、尺寸、标题、前景/背景色、字体与常用控件：CommandButton、Label、TextBox、ComboBox、ListBox、CheckBox、OptionButton、Frame、Image、ScrollBar、SpinButton、TabStrip、MultiPage 等。
 - 未识别的控件 GUID 以虚框占位显示，不阻断预览。
+- 无设计段兜底（0.2.2）：有些同步工具导出的 `.frm` 只含代码（设计段留在 Excel 文件里）。此时扫描 `UserForm_Initialize` 等代码中的 `With Me` / `With .控件` 与属性赋值，推断窗体尺寸、控件类型、位置、标题与字体；信息不足时按控件名前缀与事件过程补全并自动排列，页面顶部明确标注“推断预览”。
 - 编辑文件时 250 ms 防抖热更新；只读，不执行 VBA；`.frx` 二进制资源不解析，图片以占位呈现。
 
 ---
 
 ## 9. 截图展示
 
-以下截图由 `npm run capture` 生成，使用**已安装的 VSIX 扩展**运行（installed-vsix 模式），非开发模式：
+以下截图由 `npm run capture`（01–08，已安装 VSIX 的 installed-vsix 模式）与 `npm run preview:form`（09–10，Playwright 渲染窗体 HTML）生成：
 
 | 截图 | 展示内容 |
 |---|---|
@@ -193,8 +194,9 @@ VBAdminx 是面向**导出的 VBA 工程**（`.bas` / `.cls` / `.frm`）的 VS C
 | ![符号面板](../output/screenshots/07-symbols-view.png) | ⑦ 左侧“VBA 符号”面板：工程模式按模块分组列出函数与变量（`Main`、`result`、`AddNumbers`），标题栏含刷新与视图选项按钮 |
 | ![点击跳转](../output/screenshots/08-symbols-jump.png) | ⑧ 点击面板中的 `AddNumbers` → 右侧打开 `Demo.bas` 并选中该名称（状态栏 `10 selected`），左侧同步高亮 |
 | ![窗体预览](../output/screenshots/09-form-preview.png) | ⑨ 0.2.0 窗体预览：按 `examples/LoginForm.frm` 设计段还原 UserForm（位置、尺寸、颜色、字体与控件）。由 `npm run preview:form` 用 Playwright/Chromium 渲染截图，非 VS Code 集成截图 |
+| ![推断预览](../output/screenshots/10-form-inferred.png) | ⑩ 0.2.2 无设计段兜底：`examples/CodeOnlyForm.frm` 只有代码，预览由 `UserForm_Initialize` 中的布局赋值推断（含顶部提示） |
 
-截图保存在 `output/screenshots/`，**不随扩展包分发**（`.vscodeignore` 排除 `output/`），需要时用 `npm run capture` 重新生成。
+截图保存在 `output/screenshots/`，**不随扩展包分发**（`.vscodeignore` 排除 `output/`）；需要时用 `npm run capture` / `npm run preview:form` 重新生成。
 
 ---
 

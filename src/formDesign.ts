@@ -26,6 +26,8 @@ export interface FormControl {
 
 export interface FormDesign {
   root?: FormControl;
+  /** true 表示模型由代码推断（原文件没有设计段），不是真实设计器数据。 */
+  inferred?: boolean;
 }
 
 /** 常见 MSForms 控件 GUID（大写）。未列出的 GUID 会显示为未知控件。 */

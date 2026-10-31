@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import * as vscode from 'vscode';
 import { t } from './i18n';
-import { parseFormDesign } from './formDesign';
+import { parseFormDesign, type FormDesign } from './formDesign';
+import { inferFormDesignFromCode } from './formInfer';
 import { buildRenderPayload, renderFormPage } from './formHtml';
 
 /**
@@ -18,6 +19,21 @@ function isFormDocument(document: vscode.TextDocument): boolean {
 
 function baseName(uri: vscode.Uri): string {
   return uri.path.split('/').pop() ?? uri.fsPath;
+}
+
+interface AnalyzedForm {
+  model: FormDesign;
+  notice?: string;
+}
+
+/** 优先使用设计段；没有设计段时按代码推断，并标记提示。 */
+function analyzeForm(text: string, uri: vscode.Uri): AnalyzedForm {
+  const parsed = parseFormDesign(text);
+  if (parsed.root) { return { model: parsed }; }
+  const name = baseName(uri).replace(/\.frm$/i, '');
+  const inferred = inferFormDesignFromCode(text, name);
+  if (inferred.root) { return { model: inferred, notice: t('form.inferred') }; }
+  return { model: parsed };
 }
 
 export class FormPreviewManager implements vscode.Disposable {
@@ -72,12 +88,14 @@ export class FormPreviewManager implements vscode.Disposable {
     if (!this.panel) { return; }
     const title = t('form.title', baseName(document.uri));
     const nonce = randomUUID().replaceAll('-', '');
+    const analyzed = analyzeForm(document.getText(), document.uri);
     this.panel.title = title;
-    this.panel.webview.html = renderFormPage(parseFormDesign(document.getText()), {
+    this.panel.webview.html = renderFormPage(analyzed.model, {
       nonce,
       title,
       hint: t('form.hint'),
       emptyText: t('form.noDesign'),
+      notice: analyzed.notice,
     });
   }
 
@@ -97,9 +115,9 @@ export class FormPreviewManager implements vscode.Disposable {
     if (!panel || !this.documentUri) { return; }
     const document = vscode.workspace.textDocuments.find(item => item.uri.toString() === this.documentUri);
     if (!document) { return; }
-    const model = parseFormDesign(document.getText());
+    const analyzed = analyzeForm(document.getText(), document.uri);
     const title = t('form.title', baseName(document.uri));
-    const payload = buildRenderPayload(model, title, t('form.noDesign'));
+    const payload = buildRenderPayload(analyzed.model, title, t('form.noDesign'), analyzed.notice);
     void panel.webview.postMessage({ type: 'render', ...payload });
     panel.title = title;
   }

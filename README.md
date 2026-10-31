@@ -3,7 +3,7 @@
 [![CI](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml)
 [![Release](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml)
 
-VS Code 扩展（`vbadminx-vscode` 0.2.1，显示名 **VBAdminx**）：为导出的 VBA 源文件提供**离线语言服务器（LSP）**、**COM 可移植类型索引（含从已安装软件自动查找）**、**多语言界面**、**内置/自定义代码片段**、**窗体预览**与**只读 AI 上下文工具 / Go 模型适配器**。
+VS Code 扩展（`vbadminx-vscode` 0.2.2，显示名 **VBAdminx**）：为导出的 VBA 源文件提供**离线语言服务器（LSP）**、**COM 可移植类型索引（含从已安装软件自动查找）**、**多语言界面**、**内置/自定义代码片段**、**窗体预览**与**只读 AI 上下文工具 / Go 模型适配器**。
 
 - 首版需求：[docs/requirements.md](docs/requirements.md) ｜ 实现与验证细节：[docs/implementation.md](docs/implementation.md)
 - 功能总览与截图：[docs/features.md](docs/features.md) ｜ Langium 评估：[docs/langium-evaluation.md](docs/langium-evaluation.md)
@@ -19,6 +19,7 @@ VS Code 扩展（`vbadminx-vscode` 0.2.1，显示名 **VBAdminx**）：为导出
 - **代码片段**：内置 `Sub`/`If`/`For`/`Select Case`/`With`/`On Error` 等片段；`vbadminx.snippets.customPath` 可加载自定义片段文件，命令 `VBAdminx: 编辑 VBA 代码片段` 创建并打开。
 - **窗体预览**：`.frm` 编辑器右上角预览按钮，WebView 近似还原 VBA 窗体并在编辑时热更新；只读，不解析 `.frx`。
 
+- **无设计段窗体预览（0.2.2）**：仅含代码的 `.frm`（设计段留在 Excel 文件里）会扫描 `UserForm_Initialize` 中的 `With Me` / `With .控件` 布局赋值与事件过程，推断控件与位置后预览，并显示“推断预览”提示。
 - **Excel 宿主默认模型（0.2.1）**：工程 `host` 为 Excel（或未配置 host）时，自动提供 Worksheet、Workbook、Range、Cells、ListObject、Chart 等常用对象与成员的**内建近似声明**；`Dim ws As Worksheet` 不再报“类型信息缺失”。显式加载的真实类型索引优先，内建模型只补缺口。
 
 ## 环境要求
@@ -125,7 +126,7 @@ F5 使用 `.vscode/launch.json` 中的「运行 VBAdminx」，先执行 `npm: co
 
 已通过（本机 Windows 实测）：
 
-- `npm run typecheck` 和单元回归测试通过（140 / 140），新增覆盖窗体设计解析/渲染、片段文件与五语言文案一致性。
+- `npm run typecheck` 和单元回归测试通过（143 / 143），新增覆盖窗体设计解析/渲染、片段文件与五语言文案一致性。
 - `npm run test:host`（VS Code **1.144.0**）：31 项检查通过；新增命令（`discoverCom`、`openSettings`、`editSnippets`、`previewForm`）均已注册。结果见 `output/vscode-api-check.json`（`failed: []`）。
 - COM 自动查找实测（Windows 注册表，只读）：`Excel;ADODB;Scripting;MSXML2` 返回 4 个类型库；对 `scrrun.dll` 提取得到 17 个类型，链路可用。
 - 窗体预览、代码片段与多语言目前由单元测试与宿主命令注册检查覆盖；未做逐语言人工走查与真实 `UserForm` 截图验收。

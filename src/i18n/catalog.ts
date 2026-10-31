@@ -126,6 +126,7 @@ const en = {
   'snippets.invalid': 'Snippet file is not valid JSON: {0}',
   'snippets.openFailed': 'Cannot open {0}: {1}',
 
+  'form.inferred': 'This .frm has no design section. The preview is inferred from layout code and event handlers; it may differ from the real form.',
   'form.onlyFrm': 'Open a .frm form file to preview.',
   'form.title': 'Form preview: {0}',
   'form.noDesign': 'No form design section was found in this file.',
@@ -247,6 +248,7 @@ const zhCn: Record<MessageKey, string> = {
   'snippets.invalid': '片段文件不是有效 JSON：{0}',
   'snippets.openFailed': '无法打开 {0}：{1}',
 
+  'form.inferred': '此 .frm 没有窗体设计段。预览由代码中的布局赋值与事件过程推断，可能与实际窗体不同。',
   'form.onlyFrm': '请打开 .frm 窗体文件再预览。',
   'form.title': '窗体预览：{0}',
   'form.noDesign': '此文件中没有窗体设计段。',
@@ -366,6 +368,7 @@ const zhTw: Record<MessageKey, string> = {
   'snippets.invalid': '片段檔案不是有效 JSON：{0}',
   'snippets.openFailed': '無法開啟 {0}：{1}',
 
+  'form.inferred': '此 .frm 沒有表單設計區段。預覽由程式碼中的版面設定與事件程序推斷，可能與實際表單不同。',
   'form.onlyFrm': '請開啟 .frm 表單檔案後再預覽。',
   'form.title': '表單預覽：{0}',
   'form.noDesign': '此檔案中沒有表單設計區段。',
@@ -485,6 +488,7 @@ const ja: Record<MessageKey, string> = {
   'snippets.invalid': 'スニペットファイルが有効な JSON ではありません: {0}',
   'snippets.openFailed': '{0} を開けません: {1}',
 
+  'form.inferred': 'この .frm にはフォームデザイン部がありません。プレビューはレイアウト設定とイベントプロシージャから推定したもので、実際のフォームと異なる場合があります。',
   'form.onlyFrm': '.frm フォームファイルを開いてからプレビューしてください。',
   'form.title': 'フォームプレビュー: {0}',
   'form.noDesign': 'このファイルにはフォームデザイン部がありません。',
@@ -604,6 +608,7 @@ const ko: Record<MessageKey, string> = {
   'snippets.invalid': '스니펫 파일이 유효한 JSON이 아닙니다: {0}',
   'snippets.openFailed': '{0}을(를) 열 수 없습니다: {1}',
 
+  'form.inferred': '이 .frm에는 폼 디자인 섹션이 없습니다. 미리 보기는 레이아웃 코드와 이벤트 프로시저에서 추론한 것이므로 실제 폼과 다를 수 있습니다.',
   'form.onlyFrm': '.frm 폼 파일을 연 후 미리 보세요.',
   'form.title': '폼 미리 보기: {0}',
   'form.noDesign': '이 파일에는 폼 디자인 섹션이 없습니다.',

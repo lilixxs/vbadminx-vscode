@@ -230,6 +230,8 @@ export interface FormPageOptions {
   title: string;
   hint: string;
   emptyText: string;
+  /** 非空时在页面上方显示推断提示。 */
+  notice?: string;
 }
 
 /** 生成完整的 WebView 文档；热更新时用 postMessage 替换 #stage。 */
@@ -258,6 +260,7 @@ export function renderFormPage(model: FormDesign, options: FormPageOptions): str
   .meta { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; font-size: 12px; }
   .meta .title { font-size: 13px; font-weight: 600; }
   .meta .hint { opacity: .65; }
+  .notice { margin: 0 0 10px; padding: 8px 10px; border-left: 3px solid #d0a300; background: rgba(208,163,0,.14); border-radius: 3px; font-size: 12px; line-height: 1.45; }
   .window { display: inline-block; max-width: 100%; border: 1px solid #b8b8b8; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 28px rgba(0,0,0,.22); background: #f0f0f0; }
   .titlebar { height: 28px; display: flex; align-items: center; gap: 8px; padding: 0 10px; background: linear-gradient(#fdfdfd, #e8e8e8); border-bottom: 1px solid #c8c8c8; font-size: 12px; color: #222; }
   .titlebar .dot { width: 9px; height: 9px; border-radius: 50%; background: #4a90d9; flex: none; }
@@ -301,6 +304,7 @@ export function renderFormPage(model: FormDesign, options: FormPageOptions): str
 </head>
 <body>
   <div class="meta"><span class="title" id="banner">${escapeHtml(options.title)}</span><span class="hint" id="hint">${escapeHtml(options.hint)}</span></div>
+  <div class="notice" id="notice" style="display:${options.notice ? 'block' : 'none'}">${escapeHtml(options.notice ?? '')}</div>
   <div class="window" id="window">
     <div class="titlebar">
       <span class="dot"></span>
@@ -314,6 +318,7 @@ export function renderFormPage(model: FormDesign, options: FormPageOptions): str
     const stage = document.getElementById('stage');
     const banner = document.getElementById('banner');
     const caption = document.getElementById('form-caption');
+    const notice = document.getElementById('notice');
     window.addEventListener('message', function (event) {
       const data = event.data;
       if (!data || data.type !== 'render') { return; }
@@ -322,6 +327,10 @@ export function renderFormPage(model: FormDesign, options: FormPageOptions): str
       stage.style.height = data.height + 'px';
       banner.textContent = data.title;
       caption.textContent = data.caption || data.title;
+      if (data.notice !== undefined) {
+        notice.textContent = data.notice;
+        notice.style.display = data.notice ? 'block' : 'none';
+      }
     });
   })();
 </script>
@@ -330,7 +339,7 @@ export function renderFormPage(model: FormDesign, options: FormPageOptions): str
 }
 
 /** 供热更新使用的数据：stage 内部 HTML 与尺寸。 */
-export function buildRenderPayload(model: FormDesign, title: string, emptyText: string): { html: string; width: number; height: number; title: string; caption: string } {
+export function buildRenderPayload(model: FormDesign, title: string, emptyText: string, notice?: string): { html: string; width: number; height: number; title: string; caption: string; notice: string } {
   const size = formClientSize(model);
   const root = model.root;
   return {
@@ -339,6 +348,7 @@ export function buildRenderPayload(model: FormDesign, title: string, emptyText: 
     height: twipsToPx(size.height),
     title,
     caption: root ? controlCaption(root) || root.name : '',
+    notice: notice ?? '',
   };
 }
 
