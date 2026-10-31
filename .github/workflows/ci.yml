@@ -46,7 +46,6 @@ jobs:
   host:
     name: VS Code 宿主集成检查
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -66,6 +65,5 @@ jobs:
           key: vscode-test-${{ runner.os }}-1.104.3
           restore-keys: vscode-test-${{ runner.os }}-
       - name: 运行宿主检查（31 项 LSP/AI 验证）
-        # 集成检查依赖图形环境，失败不阻断 CI（job 级 continue-on-error 仍是兜底）。
-        continue-on-error: true
+        # 集成检查依赖图形环境。失败必须让 CI 变红：continue-on-error 曾把真实失败掩盖成绿色。
         run: xvfb-run -a npm run test:host
