@@ -14,6 +14,10 @@ export async function run(): Promise<void> {
   const api = await extension.activate();
   const status = await api.client.sendRequest<{ modules: number }>('vba/projectStatus');
   assert.ok(status.modules >= 2, '语言服务器索引示例工程');
+  // lm.tools 由扩展宿主异步填充：初始快照在宿主构造时请求，后续靠 $onDidChangeTools 通知。
+  // 激活完成不等于该缓存已刷新，轮询等待，避免在慢速 runner 上读到旧快照。
+  const toolDeadline = Date.now() + 10000;
+  while (!vscode.lm.tools.some(tool => tool.name === 'get_vba_context') && Date.now() < toolDeadline) { await new Promise(resolve => setTimeout(resolve, 100)); }
   assert.ok(vscode.lm.tools.some(tool => tool.name === 'get_vba_context'), '工具已注册');
   const discovered = await vscode.lm.selectChatModels({ vendor: 'vbadminx-go' });
   assert.ok(discovered.some(model => model.id === 'opencode-go/deepseek-v4.1-flash'), 'VS Code 可以发现提供器模型');
