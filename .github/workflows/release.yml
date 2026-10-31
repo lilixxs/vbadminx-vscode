@@ -34,8 +34,8 @@ jobs:
         run: |
           git fetch --tags --force --quiet
           version=$(node -p "require('./package.json').version")
-          file=$(ls output/*.vsix | head -n1)
-          name=$(basename "$file")
+          name=$(node -p "const p=require('./package.json'); p.name + '-' + p.version + '.vsix'")
+          file="output/$name"
           sha=$(sha256sum "$file" | awk '{print $1}')
           current="${GITHUB_REF_NAME:-}"
           case "$current" in v*) ;; *) current="v$version" ;; esac
