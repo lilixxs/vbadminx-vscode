@@ -40,6 +40,15 @@ git push origin v0.1.0
 3. 若配置了 `OVSX_PAT` → `ovsx publish` 到 Open VSX Registry；
 4. 用内置的 `GITHUB_TOKEN` 创建 GitHub Release，并附加 VSIX。
 
+Release 正文由工作流自动生成，固定包含：
+
+1. **更新内容**：上一个 tag 到当前 tag 之间的提交标题（无提交时写“本次发布包含维护性更新”）；
+2. **SHA-256**：VSIX 的校验值（`sha256sum` 输出，含文件名）；
+3. **VSIX 安装方法**：下载附件、`从 VSIX 安装...` 与 `code --install-extension` 命令；
+4. **VS Code Marketplace**：<https://marketplace.visualstudio.com/items?itemName=lilixxs.vbadminx-vscode>。
+
+生成逻辑在 `release.yml` 的“生成发布说明”步骤，输出 `release-notes.md` 并以 `body_path` 提交给 GitHub Release。
+
 **发布凭据的两种来源**：有 `VSCE_PAT` 用 PAT；没有则走 OIDC，此时 publisher 必须在 Marketplace 已存在且配好 Trusted Publishing，否则该步骤报 404。市场发布失败**不会**中断 Open VSX 与 GitHub Release（这两个步骤带 `if: ${{ !cancelled() }}`）。
 
 ## 4. 需要配置的 Secrets

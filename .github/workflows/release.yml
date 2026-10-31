@@ -15,6 +15,9 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 需要完整历史与 tag 来生成“更新内容”。
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -25,6 +28,40 @@ jobs:
         run: npm test
       - name: 打包 VSIX
         run: npm run package
+      - name: 生成发布说明
+        id: notes
+        shell: bash
+        run: |
+          git fetch --tags --force --quiet
+          version=$(node -p "require('./package.json').version")
+          file=$(ls output/*.vsix | head -n1)
+          name=$(basename "$file")
+          sha=$(sha256sum "$file" | awk '{print $1}')
+          current="${GITHUB_REF_NAME:-}"
+          case "$current" in v*) ;; *) current="v$version" ;; esac
+          previous=$(git tag --sort=-version:refname | grep -vx "$current" | head -n1 || true)
+          if [ -n "$previous" ]; then
+            commits=$(git log "$previous..HEAD" --no-merges --pretty=format:'- %s' 2>/dev/null || true)
+          else
+            commits=$(git log --no-merges -n 20 --pretty=format:'- %s' 2>/dev/null || true)
+          fi
+          {
+            printf '## 更新内容\n\n'
+            if [ -n "$commits" ]; then printf '%s\n' "$commits"; else printf -- '- 本次发布包含维护性更新。\n'; fi
+            printf '\n## SHA-256\n\n'
+            printf '`%s  %s`\n' "$sha" "$name"
+            printf '\n## VSIX 安装方法\n\n'
+            printf '1. 下载本 Release 附件中的 `%s`。\n' "$name"
+            printf '2. 打开 VS Code，进入扩展视图，点击右上角 `...` → **从 VSIX 安装...**，选择该文件。\n'
+            printf '3. 或在终端执行：`code --install-extension %s`\n' "$name"
+            printf '4. 安装完成后按提示重新加载窗口。\n'
+            printf '\n## VS Code Marketplace\n\n'
+            printf 'https://marketplace.visualstudio.com/items?itemName=lilixxs.vbadminx-vscode\n'
+          } > release-notes.md
+          echo "sha256=$sha" >> "$GITHUB_OUTPUT"
+          echo "vsix=$name" >> "$GITHUB_OUTPUT"
+          echo '----- release-notes.md -----'
+          cat release-notes.md
       - name: 发布到 VS Code Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
@@ -56,6 +93,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: output/*.vsix
-          generate_release_notes: true
+          body_path: release-notes.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

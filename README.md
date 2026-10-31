@@ -1,9 +1,11 @@
 # VBAdminx
 
 [![CI](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/ci.yml)
+[![Marketplace](https://img.shields.io/visual-studio-marketplace/v/lilixxs.vbadminx-vscode?label=Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=lilixxs.vbadminx-vscode)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/lilixxs.vbadminx-vscode)](https://marketplace.visualstudio.com/items?itemName=lilixxs.vbadminx-vscode)
 [![Release](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml/badge.svg)](https://github.com/lilixxs/vbadminx-vscode/actions/workflows/release.yml)
 
-VS Code 扩展（`vbadminx-vscode` 0.2.2，显示名 **VBAdminx**）：为导出的 VBA 源文件提供**离线语言服务器（LSP）**、**COM 可移植类型索引（含从已安装软件自动查找）**、**多语言界面**、**内置/自定义代码片段**、**窗体预览**与**只读 AI 上下文工具 / Go 模型适配器**。
+VS Code 扩展（`vbadminx-vscode` 0.2.3，显示名 **VBAdminx**）：为导出的 VBA 源文件提供**离线语言服务器（LSP）**、**COM 可移植类型索引（含从已安装软件自动查找）**、**多语言界面**、**内置/自定义代码片段**、**窗体预览**与**只读 AI 上下文工具 / Go 模型适配器**。
 
 - 首版需求：[docs/requirements.md](docs/requirements.md) ｜ 实现与验证细节：[docs/implementation.md](docs/implementation.md)
 - 功能总览与截图：[docs/features.md](docs/features.md) ｜ Langium 评估：[docs/langium-evaluation.md](docs/langium-evaluation.md)
@@ -21,6 +23,12 @@ VS Code 扩展（`vbadminx-vscode` 0.2.2，显示名 **VBAdminx**）：为导出
 
 - **无设计段窗体预览（0.2.2）**：仅含代码的 `.frm`（设计段留在 Excel 文件里）会扫描 `UserForm_Initialize` 中的 `With Me` / `With .控件` 布局赋值与事件过程，推断控件与位置后预览，并显示“推断预览”提示。
 - **Excel 宿主默认模型（0.2.1）**：工程 `host` 为 Excel（或未配置 host）时，自动提供 Worksheet、Workbook、Range、Cells、ListObject、Chart 等常用对象与成员的**内建近似声明**；`Dim ws As Worksheet` 不再报“类型信息缺失”。显式加载的真实类型索引优先，内建模型只补缺口。
+
+## 安装
+
+- **VS Code Marketplace**：<https://marketplace.visualstudio.com/items?itemName=lilixxs.vbadminx-vscode>
+- 命令行：`code --install-extension lilixxs.vbadminx-vscode`
+- 离线安装：从 [GitHub Releases](https://github.com/lilixxs/vbadminx-vscode/releases) 下载 `.vsix`，在扩展视图右上角 `...` → **从 VSIX 安装...**。
 
 ## 环境要求
 

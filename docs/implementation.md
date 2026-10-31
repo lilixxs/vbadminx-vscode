@@ -1,6 +1,6 @@
-# VBAdminx 0.2.2 实现说明
+# VBAdminx 0.2.3 实现说明
 
-本文记录 vbadminx-vscode 0.2.2 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
+本文记录 vbadminx-vscode 0.2.3 **已实现且经本机验证**的架构与行为。需求与验收目标以 [requirements.md](requirements.md) 为准（本文不修改需求）；AI 协议细节见 [ai-prototype.md](ai-prototype.md)；术语见 [GLOSSARY.md](../GLOSSARY.md)；操作步骤见 [README](../README.md)。
 
 ## 1. 定位
 
