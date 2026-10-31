@@ -3,6 +3,7 @@
   "displayName": "VBAdminx",
   "description": "%ext.description%",
   "version": "0.2.3",
+  "icon": "resources/icon.png",
   "publisher": "lilixxs",
   "private": true,
   "keywords": [

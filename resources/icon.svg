@@ -1,0 +1,85 @@
+<svg viewBox="0 0 256 256" width="256" height="256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 容器与滤镜定义 -->
+  <defs>
+    <!-- 背景暗紫渐变 -->
+    <linearGradient id="bgGrad" x1="28" y1="20" x2="228" y2="236" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#140924"/>
+      <stop offset="50%" stop-color="#0D0718"/>
+      <stop offset="100%" stop-color="#06030B"/>
+    </linearGradient>
+
+    <!-- 背景背板：现代 Fluent VBA 洋红至深紫渐变 -->
+    <linearGradient id="vbaPlateGrad" x1="32" y1="36" x2="164" y2="168" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D946EF" stop-opacity="0.85"/>
+      <stop offset="60%" stop-color="#9333EA" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#581C87" stop-opacity="0.10"/>
+    </linearGradient>
+
+    <!-- 棱柱顶面高光渐变 -->
+    <linearGradient id="prismTop" x1="68" y1="52" x2="188" y2="105" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F472B6"/>
+      <stop offset="45%" stop-color="#C084FC"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+
+    <!-- 棱柱左立面暗调渐变 -->
+    <linearGradient id="prismLeft" x1="68" y1="86" x2="128" y2="198" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6B21A8"/>
+      <stop offset="60%" stop-color="#3B0764"/>
+      <stop offset="100%" stop-color="#1E0734"/>
+    </linearGradient>
+
+    <!-- 棱柱右立面反射渐变 -->
+    <linearGradient id="prismRight" x1="188" y1="86" x2="128" y2="198" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9D174D"/>
+      <stop offset="50%" stop-color="#4C0519"/>
+      <stop offset="100%" stop-color="#1F040E"/>
+    </linearGradient>
+
+    <!-- 中央 V 腔体霓虹光感 -->
+    <linearGradient id="vChamberGrad" x1="102" y1="105" x2="128" y2="162" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="40%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#C026D3"/>
+    </linearGradient>
+
+    <!-- 内部光晕滤镜 -->
+    <filter id="coreGlow" x="80" y="80" width="96" height="96" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- 1. 底层图标圆角容器 -->
+  <rect x="2" y="2" width="252" height="252" rx="54" fill="url(#bgGrad)"/>
+  <rect x="2" y="2" width="252" height="252" rx="54" stroke="#A855F7" stroke-width="1.5" stroke-opacity="0.22"/>
+
+  <!-- 2. 现代 Fluent VBA 风格背板（错位几何背板，增强深度与 Office/VBA 符号归属） -->
+  <rect x="28" y="28" width="92" height="92" rx="22" fill="url(#vbaPlateGrad)"/>
+  <rect x="28" y="28" width="92" height="92" rx="22" stroke="#F472B6" stroke-width="1" stroke-opacity="0.3"/>
+
+  <!-- 背板装饰：精细代码横条 -->
+  <rect x="42" y="46" width="36" height="4" rx="2" fill="#FFFFFF" fill-opacity="0.35"/>
+  <rect x="42" y="56" width="54" height="4" rx="2" fill="#FFFFFF" fill-opacity="0.2"/>
+  <rect x="42" y="66" width="26" height="4" rx="2" fill="#FFFFFF" fill-opacity="0.2"/>
+
+  <!-- 3. 前景等轴测棱柱结构 (Isometric Monolith) -->
+  <!-- 顶面受光面 (Top Face) -->
+  <path d="M128 52 L188 86 L154 105 L128 90 L102 105 L68 86 Z" fill="url(#prismTop)"/>
+  
+  <!-- 左外立面 (Left Outer Face) -->
+  <path d="M68 86 L128 120 L128 198 L68 164 Z" fill="url(#prismLeft)"/>
+  
+  <!-- 右外立面 (Right Outer Face) -->
+  <path d="M188 86 L188 164 L128 198 L128 120 Z" fill="url(#prismRight)"/>
+
+  <!-- 4. 中央下切 V 字腔体 (V-Core Notch) -->
+  <path d="M102 105 L128 120 L154 105 L128 152 Z" fill="url(#vChamberGrad)" filter="url(#coreGlow)"/>
+
+  <!-- 5. 核心脉冲指示节点与光标点 (Core Focus Point) -->
+  <circle cx="128" cy="152" r="3.5" fill="#FFFFFF"/>
+  <circle cx="128" cy="152" r="8" stroke="#38BDF8" stroke-width="1.5" stroke-opacity="0.5"/>
+
+  <!-- 6. 棱柱底部对齐微光边线 -->
+  <path d="M68 164 L128 198 L188 164" stroke="#F472B6" stroke-width="1.2" stroke-opacity="0.4" stroke-linecap="round"/>
+</svg>
